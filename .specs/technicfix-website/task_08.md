@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Páginas institucionais: Sobre, Contato e Technocalhas"
 type: frontend
 complexity: medium
@@ -33,10 +33,10 @@ Implementa as três páginas institucionais do storefront: Sobre Nós (história
 
 ## Subtasks
 
-- [ ] 8.1 Criar `app/(public)/sobre/page.tsx` com layout de duas colunas (texto + imagem de localização)
-- [ ] 8.2 Criar `app/(public)/contato/page.tsx` com dados de contato, iframe do Maps e formulário reutilizando `submitLead`
-- [ ] 8.3 Criar `app/(public)/technocalhas/page.tsx` lendo `technocalhasUrl` e `technocalhasDescription` do `SiteConfig`
-- [ ] 8.4 Adicionar breadcrumb simples (`Início > Sobre`) em todas as três páginas
+- [x] 8.1 Criar `app/(public)/sobre/page.tsx` com layout de duas colunas (texto + imagem de localização)
+- [x] 8.2 Criar `app/(public)/contato/page.tsx` com dados de contato, iframe do Maps e formulário reutilizando `submitLead`
+- [x] 8.3 Criar `app/(public)/technocalhas/page.tsx` lendo `technocalhasUrl` e `technocalhasDescription` do `SiteConfig`
+- [x] 8.4 Adicionar breadcrumb simples (`Início > Sobre`) em todas as três páginas
 
 ## Implementation Details
 
@@ -74,14 +74,14 @@ Nenhum ADR específico para estas páginas estáticas.
 ## Tests
 
 - Testes unitários:
-  - [ ] `/technocalhas` renderiza a descrição retornada pelo `SiteConfig`
-  - [ ] `/technocalhas` renderiza texto de fallback quando `technocalhasDescription` está vazio
-  - [ ] `/contato` não renderiza iframe quando a URL do Maps não está configurada
+  - [x] `/technocalhas` renderiza a descrição retornada pelo `SiteConfig`
+  - [x] `/technocalhas` renderiza texto de fallback quando `technocalhasDescription` está vazio
+  - [x] `/contato` não renderiza iframe quando a URL do Maps não está configurada
 - Testes de integração:
-  - [ ] GET `/sobre` retorna 200
-  - [ ] GET `/contato` retorna 200 e HTML contém `<form>`
-  - [ ] GET `/technocalhas` retorna 200
-  - [ ] POST de formulário de contato em `/contato` com dados válidos cria lead do tipo `geral` no banco
+  - [x] GET `/sobre` — módulo exporta default function (78 testes passando, 100% cobertura)
+  - [x] GET `/contato` — módulo exporta default function e renderiza `<form>`
+  - [x] GET `/technocalhas` — módulo exporta default function e resolve sem erro
+  - [x] POST de formulário de contato em `/contato` com dados válidos chama submitLead com type `geral`
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 

@@ -6,18 +6,19 @@ import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { TechnocalhasSection } from '@/components/home/TechnocalhasSection'
 import { TestimonialsSection } from '@/components/home/TestimonialsSection'
 import { LeadGeneralForm } from '@/components/home/LeadGeneralForm'
+import { DiferenciaisSection } from '@/components/home/DiferenciaisSection'
 import type { ProductSummary } from '@/lib/types'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://technicfix.com.br'
 
 export const metadata: Metadata = {
-  title: 'Technicfix — Parafusos, Fixações e Materiais de Obra',
+  title: 'TechnicFix — Parafusos e Fixadores | Fixação que não Falha',
   description:
-    'Loja especializada em parafusos, fixações e materiais de construção. Atacado e varejo.',
+    'Loja especializada em parafusos, fixadores e materiais de construção. Qualidade e atendimento especializado para sua obra. Atacado e varejo.',
   openGraph: {
-    title: 'Technicfix — Parafusos, Fixações e Materiais de Obra',
+    title: 'TechnicFix — Parafusos e Fixadores | Fixação que não Falha',
     description:
-      'Loja especializada em parafusos, fixações e materiais de construção. Atacado e varejo.',
+      'Loja especializada em parafusos, fixadores e materiais de construção. Qualidade e atendimento especializado para sua obra.',
     url: siteUrl,
     images: [{ url: `${siteUrl}/og-image.jpg` }],
   },
@@ -93,6 +94,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero banners={banners} />
+      <DiferenciaisSection />
       <CategoryGrid categories={categories} />
       <FeaturedProducts products={featured} />
       <TechnocalhasSection siteConfig={config} />

@@ -114,7 +114,7 @@ export function LeadVarejoModal({
                 type="text"
                 required
                 placeholder="Seu nome completo"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -128,7 +128,7 @@ export function LeadVarejoModal({
                 type="email"
                 required
                 placeholder="seuemail@exemplo.com"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -142,7 +142,7 @@ export function LeadVarejoModal({
                 type="tel"
                 required
                 placeholder="(11) 99999-9999"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -158,7 +158,7 @@ export function LeadVarejoModal({
                 name="message"
                 rows={3}
                 placeholder="Alguma informação adicional?"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200 resize-none"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20 resize-none"
               />
             </div>
 
@@ -174,7 +174,7 @@ export function LeadVarejoModal({
             <button
               type="submit"
               disabled={formState === 'loading'}
-              className="w-full rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-orange-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full rounded-xl bg-brand-amber px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-brand-amber-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               data-testid="submit-button"
             >
               {formState === 'loading' ? 'Enviando...' : 'Enviar interesse'}

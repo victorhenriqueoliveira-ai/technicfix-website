@@ -21,15 +21,15 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <article className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+      <article className="group flex flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-sm transition-all duration-200 hover:border-brand-amber hover:shadow-lg hover:shadow-brand-amber/10">
         {/* Imagem */}
-        <Link href={`/produtos/${product.slug}`} className="relative block aspect-square overflow-hidden bg-gray-100">
+        <Link href={`/produtos/${product.slug}`} className="relative block aspect-square overflow-hidden bg-gray-50">
           {imageSrc ? (
             <Image
               src={imageSrc}
               alt={product.name}
               fill
-              className="object-cover transition-transform hover:scale-105"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <ProductImagePlaceholder label={`Sem imagem para ${product.name}`} />
@@ -37,11 +37,11 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
 
         {/* Conteúdo */}
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex flex-1 flex-col p-4 border-t-2 border-transparent group-hover:border-brand-amber transition-colors">
           {/* Badge de categoria */}
           <Link
             href={`/produtos?categoria=${product.category.slug}`}
-            className="mb-1 inline-block self-start rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700 hover:bg-orange-200"
+            className="mb-1 inline-block self-start rounded-full bg-brand-amber/10 px-2 py-0.5 text-xs font-bold text-brand-amber hover:bg-brand-amber/20 transition-colors"
             data-testid="categoria-badge"
           >
             {product.category.name}
@@ -49,14 +49,14 @@ export function ProductCard({ product }: ProductCardProps) {
 
           {/* Nome */}
           <Link href={`/produtos/${product.slug}`} className="mt-1 flex-1">
-            <h3 className="text-sm font-medium text-gray-900 line-clamp-2 hover:text-orange-600">
+            <h3 className="text-sm font-bold text-brand-navy line-clamp-2 group-hover:text-brand-amber transition-colors">
               {product.name}
             </h3>
           </Link>
 
           {/* Preço */}
           {product.price !== null && (
-            <p className="mt-2 text-base font-semibold text-gray-800">
+            <p className="mt-2 text-base font-extrabold text-brand-navy">
               {Number(product.price).toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
@@ -69,8 +69,8 @@ export function ProductCard({ product }: ProductCardProps) {
             <button
               type="button"
               className={cn(
-                'flex-1 rounded-md border border-orange-500 px-3 py-1.5 text-xs font-medium text-orange-600',
-                'transition-colors hover:bg-orange-50',
+                'flex-1 rounded-lg border-2 border-brand-navy px-3 py-1.5 text-xs font-bold text-brand-navy',
+                'transition-colors hover:bg-brand-navy hover:text-white',
               )}
               onClick={() => setVarejoOpen(true)}
               data-testid="cta-interesse"
@@ -80,13 +80,13 @@ export function ProductCard({ product }: ProductCardProps) {
             <button
               type="button"
               className={cn(
-                'flex-1 rounded-md bg-orange-500 px-3 py-1.5 text-xs font-medium text-white',
-                'transition-colors hover:bg-orange-600',
+                'flex-1 rounded-lg bg-brand-amber px-3 py-1.5 text-xs font-bold text-brand-navy',
+                'transition-colors hover:bg-brand-amber-dark',
               )}
               onClick={() => setAtacadoOpen(true)}
               data-testid="cta-orcamento"
             >
-              Solicitar orçamento
+              Orçamento
             </button>
           </div>
         </div>

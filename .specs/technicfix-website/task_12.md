@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Admin: CRUD de banners + reordenação drag-and-drop"
 type: frontend
 complexity: high
@@ -34,11 +34,11 @@ Implementa o gerenciamento de banners da homepage no painel admin: criação, ed
 
 ## Subtasks
 
-- [ ] 12.1 Instalar `@dnd-kit/core` e `@dnd-kit/sortable`
-- [ ] 12.2 Criar `actions/banners.ts` com CRUD e `reorderBanners` usando transação Prisma
-- [ ] 12.3 Criar `components/admin/banners/BannerForm.tsx` com upload de imagem reutilizando a rota `/api/upload/presigned`
-- [ ] 12.4 Criar `components/admin/banners/BannerList.tsx` com `@dnd-kit/sortable` para drag-and-drop
-- [ ] 12.5 Criar `app/admin/banners/page.tsx` combinando a lista e o form em um layout de página única
+- [x] 12.1 Instalar `@dnd-kit/core` e `@dnd-kit/sortable`
+- [x] 12.2 Criar `actions/banners.ts` com CRUD e `reorderBanners` usando transação Prisma
+- [x] 12.3 Criar `components/admin/banners/BannerForm.tsx` com upload de imagem reutilizando a rota `/api/upload/presigned`
+- [x] 12.4 Criar `components/admin/banners/BannerList.tsx` com `@dnd-kit/sortable` para drag-and-drop
+- [x] 12.5 Criar `app/admin/banners/page.tsx` combinando a lista e o form em um layout de página única
 
 ## Implementation Details
 
@@ -80,14 +80,14 @@ Upload de imagem do banner reutiliza `POST /api/upload/presigned` da task 11 (me
 ## Tests
 
 - Testes unitários:
-  - [ ] `BannerList` renderiza um item por banner recebido como prop
-  - [ ] `BannerList` emite a nova ordem de IDs após o drop
-  - [ ] `BannerForm` exibe campos de título, subtítulo, CTA e URL
+  - [x] `BannerList` renderiza um item por banner recebido como prop
+  - [x] `BannerList` emite a nova ordem de IDs após o drop
+  - [x] `BannerForm` exibe campos de título, subtítulo, CTA e URL
 - Testes de integração:
-  - [ ] `createBanner` com dados válidos cria banner no banco com `active: true` e `order` maior que os existentes
-  - [ ] `reorderBanners(['id2', 'id1'])` atualiza `order` de `id2` para 0 e `id1` para 1
-  - [ ] Banner com `active: false` não aparece na query da homepage (`/`)
-  - [ ] `deleteBanner` remove o banner e `revalidatePath('/')` é chamado
+  - [x] `createBanner` com dados válidos cria banner no banco com `active: true` e `order` maior que os existentes
+  - [x] `reorderBanners(['id2', 'id1'])` atualiza `order` de `id2` para 0 e `id1` para 1
+  - [x] Banner com `active: false` não aparece na query da homepage (`/`)
+  - [x] `deleteBanner` remove o banner e `revalidatePath('/')` é chamado
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 

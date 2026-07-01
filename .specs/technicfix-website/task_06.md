@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Catálogo de produtos: listagem paginada, filtros por categoria, busca e página de detalhe"
 type: frontend
 complexity: high
@@ -37,13 +37,13 @@ Implementa as duas páginas do catálogo público: a listagem de produtos com fi
 
 ## Subtasks
 
-- [ ] 6.1 Criar `app/(public)/produtos/page.tsx` com query ao banco filtrando por categoria e busca, com paginação
-- [ ] 6.2 Criar `components/catalog/ProductCard.tsx` e `components/catalog/CategoryFilter.tsx`
-- [ ] 6.3 Criar `components/catalog/SearchBar.tsx` com `useRouter` e `useSearchParams` para atualizar URL
-- [ ] 6.4 Criar `app/(public)/produtos/[slug]/page.tsx` com query por slug, retornando 404 se não encontrado
-- [ ] 6.5 Criar `components/catalog/ProductGallery.tsx` com troca de imagem principal ao clicar na miniatura
-- [ ] 6.6 Criar `app/(public)/categorias/[slug]/page.tsx` redirecionando para catálogo filtrado
-- [ ] 6.7 Validar que buscas e filtros funcionam combinados (ex.: `?categoria=parafusos&busca=inox`)
+- [x] 6.1 Criar `app/(public)/produtos/page.tsx` com query ao banco filtrando por categoria e busca, com paginação
+- [x] 6.2 Criar `components/catalog/ProductCard.tsx` e `components/catalog/CategoryFilter.tsx`
+- [x] 6.3 Criar `components/catalog/SearchBar.tsx` com `useRouter` e `useSearchParams` para atualizar URL
+- [x] 6.4 Criar `app/(public)/produtos/[slug]/page.tsx` com query por slug, retornando 404 se não encontrado
+- [x] 6.5 Criar `components/catalog/ProductGallery.tsx` com troca de imagem principal ao clicar na miniatura
+- [x] 6.6 Criar `app/(public)/categorias/[slug]/page.tsx` redirecionando para catálogo filtrado
+- [x] 6.7 Validar que buscas e filtros funcionam combinados (ex.: `?categoria=parafusos&busca=inox`)
 
 ## Implementation Details
 
@@ -89,17 +89,17 @@ A paginação usa `skip` e `take` do Prisma com controles de "Anterior/Próxima"
 ## Tests
 
 - Testes unitários:
-  - [ ] `ProductCard` renderiza nome, categoria e dois botões de CTA
-  - [ ] `CategoryFilter` marca como ativo o slug correspondente ao query param atual
-  - [ ] `SearchBar` atualiza a URL com `?busca=` ao submeter o formulário
-  - [ ] `ProductGallery` troca a imagem principal ao clicar em uma miniatura
+  - [x] `ProductCard` renderiza nome, categoria e dois botões de CTA
+  - [x] `CategoryFilter` marca como ativo o slug correspondente ao query param atual
+  - [x] `SearchBar` atualiza a URL com `?busca=` ao submeter o formulário
+  - [x] `ProductGallery` troca a imagem principal ao clicar em uma miniatura
 - Testes de integração:
-  - [ ] GET `/produtos` retorna 200 com banco vazio (lista vazia, sem erro)
-  - [ ] GET `/produtos?categoria=parafusos` retorna apenas produtos da categoria "parafusos"
-  - [ ] GET `/produtos?busca=inox` retorna apenas produtos com "inox" no nome
-  - [ ] GET `/produtos/slug-inexistente` retorna 404
-  - [ ] GET `/produtos/slug-valido` retorna 200 com nome do produto no HTML
-  - [ ] Produto com `status: inativo` não aparece em GET `/produtos`
+  - [x] GET `/produtos` retorna 200 com banco vazio (lista vazia, sem erro)
+  - [x] GET `/produtos?categoria=parafusos` retorna apenas produtos da categoria "parafusos"
+  - [x] GET `/produtos?busca=inox` retorna apenas produtos com "inox" no nome
+  - [x] GET `/produtos/slug-inexistente` retorna 404
+  - [x] GET `/produtos/slug-valido` retorna 200 com nome do produto no HTML
+  - [x] Produto com `status: inativo` não aparece em GET `/produtos`
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 

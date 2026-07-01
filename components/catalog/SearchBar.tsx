@@ -15,7 +15,6 @@ export function SearchBar({ placeholder = 'Buscar produtos...' }: SearchBarProps
   const inputRef = useRef<HTMLInputElement>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Preenche o input com o valor atual da URL ao montar
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.value = searchParams.get('busca') ?? ''
@@ -38,7 +37,6 @@ export function SearchBar({ placeholder = 'Buscar produtos...' }: SearchBarProps
         } else {
           params.delete('busca')
         }
-        // Reinicia paginação ao buscar
         params.delete('page')
 
         router.replace(`${pathname}?${params.toString()}`)
@@ -50,7 +48,7 @@ export function SearchBar({ placeholder = 'Buscar produtos...' }: SearchBarProps
   return (
     <div className="relative">
       <SearchIcon
-        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-navy/40"
         aria-hidden="true"
       />
       <input
@@ -58,7 +56,7 @@ export function SearchBar({ placeholder = 'Buscar produtos...' }: SearchBarProps
         type="search"
         placeholder={placeholder}
         onChange={handleChange}
-        className="w-full rounded-md border border-gray-300 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+        className="w-full rounded-xl border-2 border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm text-brand-navy placeholder-brand-navy/30 focus:border-brand-amber focus:outline-none focus:ring-0 transition-colors"
         aria-label="Buscar produtos"
         data-testid="search-input"
       />

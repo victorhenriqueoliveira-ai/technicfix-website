@@ -18,7 +18,7 @@ export function ProductCTAs({ productId, productName }: ProductCTAsProps) {
       <div className="flex gap-3 pt-2">
         <button
           type="button"
-          className="flex-1 rounded-md border border-orange-500 px-4 py-2 text-sm font-medium text-orange-600 transition-colors hover:bg-orange-50"
+          className="flex-1 rounded-xl border-2 border-brand-navy px-4 py-2 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white"
           onClick={() => setVarejoOpen(true)}
           data-testid="cta-interesse"
         >
@@ -26,7 +26,7 @@ export function ProductCTAs({ productId, productName }: ProductCTAsProps) {
         </button>
         <button
           type="button"
-          className="flex-1 rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600"
+          className="flex-1 rounded-xl bg-brand-amber px-4 py-2 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-amber-dark"
           onClick={() => setAtacadoOpen(true)}
           data-testid="cta-orcamento"
         >

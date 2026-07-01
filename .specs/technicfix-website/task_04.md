@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Layout público: Header, Footer e botão WhatsApp flutuante"
 type: frontend
 complexity: medium
@@ -34,11 +34,11 @@ Implementa o layout compartilhado de todas as páginas públicas do storefront: 
 
 ## Subtasks
 
-- [ ] 4.1 Criar `app/(public)/layout.tsx` importando Header, Footer e WhatsAppButton
-- [ ] 4.2 Criar `components/layout/Header.tsx` com logo, navegação desktop e menu mobile (Sheet do shadcn/ui)
-- [ ] 4.3 Criar `components/layout/Footer.tsx` com links, contato e copyright
-- [ ] 4.4 Criar `components/layout/WhatsAppButton.tsx` com link `https://wa.me/{número}` e ícone do WhatsApp
-- [ ] 4.5 Validar layout em viewport mobile (320px) e desktop (1280px) sem overflow horizontal
+- [x] 4.1 Criar `app/(public)/layout.tsx` importando Header, Footer e WhatsAppButton
+- [x] 4.2 Criar `components/layout/Header.tsx` com logo, navegação desktop e menu mobile (Sheet do shadcn/ui)
+- [x] 4.3 Criar `components/layout/Footer.tsx` com links, contato e copyright
+- [x] 4.4 Criar `components/layout/WhatsAppButton.tsx` com link `https://wa.me/{número}` e ícone do WhatsApp
+- [x] 4.5 Validar layout em viewport mobile (320px) e desktop (1280px) sem overflow horizontal
 
 ## Implementation Details
 
@@ -77,10 +77,10 @@ Nenhum ADR específico — decisões de layout derivam dos requisitos de UX do P
 ## Tests
 
 - Testes unitários:
-  - [ ] `WhatsAppButton` não renderiza quando `NEXT_PUBLIC_WHATSAPP_NUMBER` não está definido
-  - [ ] `WhatsAppButton` renderiza link `https://wa.me/55{número}` quando variável está definida
-  - [ ] `Header` renderiza link ativo com classe de destaque correspondente ao pathname atual
-  - [ ] Menu mobile (Sheet) abre ao clicar no ícone hambúrguer e fecha ao clicar em um link
+  - [x] `WhatsAppButton` não renderiza quando `NEXT_PUBLIC_WHATSAPP_NUMBER` não está definido
+  - [x] `WhatsAppButton` renderiza link `https://wa.me/55{número}` quando variável está definida
+  - [x] `Header` renderiza link ativo com classe de destaque correspondente ao pathname atual
+  - [x] Menu mobile (Sheet) abre ao clicar no ícone hambúrguer e fecha ao clicar em um link
 - Testes de integração:
   - [ ] GET `/` retorna HTML com elementos `<header>` e `<footer>` presentes
   - [ ] Layout não causa overflow horizontal em viewport de 320px

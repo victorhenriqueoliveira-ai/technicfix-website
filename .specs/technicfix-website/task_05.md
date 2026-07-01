@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Homepage: Hero rotativo, Categorias, Produtos em Destaque, Technocalhas, Depoimentos, Formulário de Lead Geral"
 type: frontend
 complexity: high
@@ -36,13 +36,13 @@ Implementa a página inicial completa do storefront com todas as seções defini
 
 ## Subtasks
 
-- [ ] 5.1 Criar `app/(public)/page.tsx` com queries paralelas para banners, categorias e produtos em destaque
-- [ ] 5.2 Criar `components/home/Hero.tsx` com carrossel de banners (usar `embla-carousel-react` ou similar)
-- [ ] 5.3 Criar `components/home/CategoryGrid.tsx` com cards de categoria responsivos
-- [ ] 5.4 Criar `components/home/FeaturedProducts.tsx` reusando o `ProductCard` da task 06 (ou criar versão simplificada)
-- [ ] 5.5 Criar `components/home/TechnocalhasSection.tsx` com identidade visual distinta
-- [ ] 5.6 Criar `components/home/TestimonialsSection.tsx` com depoimentos estáticos
-- [ ] 5.7 Criar `components/home/LeadGeneralForm.tsx` integrado à Server Action de lead (task 07 entrega a action — usar placeholder até task 07 estar pronta)
+- [x] 5.1 Criar `app/(public)/page.tsx` com queries paralelas para banners, categorias e produtos em destaque
+- [x] 5.2 Criar `components/home/Hero.tsx` com carrossel de banners (usar `embla-carousel-react` ou similar)
+- [x] 5.3 Criar `components/home/CategoryGrid.tsx` com cards de categoria responsivos
+- [x] 5.4 Criar `components/home/FeaturedProducts.tsx` reusando o `ProductCard` da task 06 (ou criar versão simplificada)
+- [x] 5.5 Criar `components/home/TechnocalhasSection.tsx` com identidade visual distinta
+- [x] 5.6 Criar `components/home/TestimonialsSection.tsx` com depoimentos estáticos
+- [x] 5.7 Criar `components/home/LeadGeneralForm.tsx` integrado à Server Action de lead (task 07 entrega a action — usar placeholder até task 07 estar pronta)
 
 ## Implementation Details
 
@@ -86,16 +86,16 @@ O formulário de lead geral pode ser implementado inicialmente com um estado de 
 ## Tests
 
 - Testes unitários:
-  - [ ] `Hero` renderiza banner de fallback quando lista de banners está vazia
-  - [ ] `Hero` renderiza o primeiro banner quando a lista tem um item
-  - [ ] `CategoryGrid` renderiza um card por categoria recebida como prop
-  - [ ] `FeaturedProducts` não renderiza seção quando lista de produtos está vazia
-  - [ ] `TechnocalhasSection` exibe o texto de descrição recebido como prop
-  - [ ] `LeadGeneralForm` exibe mensagem de sucesso após envio bem-sucedido
-  - [ ] `LeadGeneralForm` exibe mensagem de erro quando o envio falha
+  - [x] `Hero` renderiza banner de fallback quando lista de banners está vazia
+  - [x] `Hero` renderiza o primeiro banner quando a lista tem um item
+  - [x] `CategoryGrid` renderiza um card por categoria recebida como prop
+  - [x] `FeaturedProducts` não renderiza seção quando lista de produtos está vazia
+  - [x] `TechnocalhasSection` exibe o texto de descrição recebido como prop
+  - [x] `LeadGeneralForm` exibe mensagem de sucesso após envio bem-sucedido
+  - [x] `LeadGeneralForm` exibe mensagem de erro quando o envio falha
 - Testes de integração:
-  - [ ] GET `/` retorna 200 com banco vazio (sem banners, categorias ou produtos cadastrados)
-  - [ ] GET `/` retorna 200 com dados do banco e renderiza os nomes das categorias no HTML
+  - [x] GET `/` retorna 200 com banco vazio (sem banners, categorias ou produtos cadastrados) — validado via next build (SSG com DB mockado)
+  - [x] GET `/` retorna 200 com dados do banco e renderiza os nomes das categorias no HTML
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 

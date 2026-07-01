@@ -19,12 +19,12 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   })
 
   if (!product) {
-    return { title: 'Produto não encontrado | Technicfix' }
+    return { title: 'Produto não encontrado | TechnicFix' }
   }
 
   return {
-    title: `${product.name} | Technicfix`,
-    description: product.description?.slice(0, 155) ?? `${product.name} — Technicfix`,
+    title: `${product.name} | TechnicFix`,
+    description: product.description?.slice(0, 155) ?? `${product.name} — TechnicFix`,
     openGraph: {
       title: product.name,
       images: product.images[0] ? [{ url: product.images[0] }] : [],
@@ -53,88 +53,92 @@ export default async function ProductPage({ params }: ProductPageProps) {
       : null
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
-      <nav className="mb-6 text-sm text-gray-500" aria-label="Breadcrumb">
-        <ol className="flex items-center gap-1">
-          <li>
-            <Link href="/" className="hover:text-orange-600">
-              Início
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li>
-            <Link href="/produtos" className="hover:text-orange-600">
-              Produtos
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li>
+      <div className="bg-brand-navy px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <nav className="text-sm text-white/60" aria-label="Breadcrumb">
+            <ol className="flex items-center gap-1.5 flex-wrap">
+              <li>
+                <Link href="/" className="hover:text-brand-amber transition-colors">Início</Link>
+              </li>
+              <li aria-hidden="true" className="text-white/30">/</li>
+              <li>
+                <Link href="/produtos" className="hover:text-brand-amber transition-colors">Produtos</Link>
+              </li>
+              <li aria-hidden="true" className="text-white/30">/</li>
+              <li>
+                <Link
+                  href={`/produtos?categoria=${product.category.slug}`}
+                  className="hover:text-brand-amber transition-colors"
+                >
+                  {product.category.name}
+                </Link>
+              </li>
+              <li aria-hidden="true" className="text-white/30">/</li>
+              <li className="text-white font-medium truncate max-w-[200px]">{product.name}</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+          {/* Galeria */}
+          <div className="rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100">
+            <ProductGallery images={product.images} productName={product.name} />
+          </div>
+
+          {/* Detalhes */}
+          <div className="flex flex-col gap-5">
+            {/* Badge de categoria */}
             <Link
               href={`/produtos?categoria=${product.category.slug}`}
-              className="hover:text-orange-600"
+              className="inline-block self-start rounded-full bg-brand-amber/10 px-3 py-1 text-xs font-bold text-brand-amber hover:bg-brand-amber/20 transition-colors"
             >
               {product.category.name}
             </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li className="text-gray-700">{product.name}</li>
-        </ol>
-      </nav>
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-        {/* Galeria */}
-        <div>
-          <ProductGallery images={product.images} productName={product.name} />
-        </div>
+            {/* Nome */}
+            <h1 className="text-2xl md:text-3xl font-extrabold text-brand-navy leading-tight" data-testid="product-name">
+              {product.name}
+            </h1>
 
-        {/* Detalhes */}
-        <div className="flex flex-col gap-4">
-          {/* Categoria */}
-          <Link
-            href={`/produtos?categoria=${product.category.slug}`}
-            className="inline-block self-start rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700 hover:bg-orange-200"
-          >
-            {product.category.name}
-          </Link>
-
-          {/* Nome */}
-          <h1 className="text-2xl font-bold text-gray-900" data-testid="product-name">
-            {product.name}
-          </h1>
-
-          {/* Preço */}
-          {priceFormatted && (
-            <p className="text-xl font-semibold text-gray-800" data-testid="product-price">
-              {priceFormatted}
-            </p>
-          )}
-
-          {/* CTAs */}
-          <ProductCTAs productId={product.id} productName={product.name} />
-
-          {/* Descrição */}
-          {product.description && (
-            <div className="mt-4">
-              <h2 className="mb-2 text-base font-semibold text-gray-800">Descrição</h2>
-              <p className="whitespace-pre-line text-sm text-gray-600" data-testid="product-description">
-                {product.description}
+            {/* Preço */}
+            {priceFormatted && (
+              <p className="text-2xl font-extrabold text-brand-navy" data-testid="product-price">
+                {priceFormatted}
               </p>
-            </div>
-          )}
+            )}
 
-          {/* Detalhes técnicos */}
-          {product.technicalDetails && (
-            <div className="mt-2">
-              <h2 className="mb-2 text-base font-semibold text-gray-800">Detalhes Técnicos</h2>
-              <p
-                className="whitespace-pre-line text-sm text-gray-600"
-                data-testid="product-technical-details"
-              >
-                {product.technicalDetails}
-              </p>
+            {/* CTAs */}
+            <div className="rounded-2xl bg-brand-navy/5 p-4 border border-brand-navy/10">
+              <ProductCTAs productId={product.id} productName={product.name} />
             </div>
-          )}
+
+            {/* Descrição */}
+            {product.description && (
+              <div className="mt-2">
+                <h2 className="mb-2 text-base font-bold text-brand-navy">Descrição</h2>
+                <p className="whitespace-pre-line text-sm text-brand-navy/70 leading-relaxed" data-testid="product-description">
+                  {product.description}
+                </p>
+              </div>
+            )}
+
+            {/* Detalhes técnicos */}
+            {product.technicalDetails && (
+              <div>
+                <h2 className="mb-2 text-base font-bold text-brand-navy">Detalhes Técnicos</h2>
+                <p
+                  className="whitespace-pre-line text-sm text-brand-navy/70 leading-relaxed"
+                  data-testid="product-technical-details"
+                >
+                  {product.technicalDetails}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: Admin — CRUD de categorias
 type: frontend
 complexity: medium
@@ -33,11 +33,11 @@ Implementa o gerenciamento completo de categorias no painel admin: listagem, cri
 
 ## Subtasks
 
-- [ ] 10.1 Criar `actions/categories.ts` com `createCategory`, `updateCategory`, `deleteCategory` (com validação Zod básica)
-- [ ] 10.2 Criar `app/admin/categorias/page.tsx` com tabela de categorias e botões de ação
-- [ ] 10.3 Criar `components/admin/categories/CategoryForm.tsx` com campos nome e slug (slug gerado automaticamente)
-- [ ] 10.4 Implementar dialog de confirmação de exclusão (usando AlertDialog do shadcn/ui)
-- [ ] 10.5 Verificar que exclusão de categoria com produtos associados retorna erro descritivo
+- [x] 10.1 Criar `actions/categories.ts` com `createCategory`, `updateCategory`, `deleteCategory` (com validação Zod básica)
+- [x] 10.2 Criar `app/admin/categorias/page.tsx` com tabela de categorias e botões de ação
+- [x] 10.3 Criar `components/admin/categories/CategoryForm.tsx` com campos nome e slug (slug gerado automaticamente)
+- [x] 10.4 Implementar dialog de confirmação de exclusão (usando AlertDialog do shadcn/ui)
+- [x] 10.5 Verificar que exclusão de categoria com produtos associados retorna erro descritivo
 
 ## Implementation Details
 
@@ -78,16 +78,16 @@ Nenhum ADR específico para CRUD de categorias.
 ## Tests
 
 - Testes unitários:
-  - [ ] `slugify('Parafuso M8 Inox')` retorna `'parafuso-m8-inox'`
-  - [ ] `slugify('Fixação & Âncoras')` retorna `'fixacao-ancoras'`
-  - [ ] `CategoryForm` gera slug automaticamente ao digitar o nome
-  - [ ] `CategoryForm` permite edição manual do slug após geração automática
+  - [x] `slugify('Parafuso M8 Inox')` retorna `'parafuso-m8-inox'`
+  - [x] `slugify('Fixação & Âncoras')` retorna `'fixacao-ancoras'`
+  - [x] `CategoryForm` gera slug automaticamente ao digitar o nome
+  - [x] `CategoryForm` permite edição manual do slug após geração automática
 - Testes de integração:
-  - [ ] `createCategory({ name: 'Parafusos', slug: 'parafusos' })` cria categoria no banco
-  - [ ] `createCategory` com slug duplicado retorna erro sem criar categoria
-  - [ ] `updateCategory` atualiza nome e slug corretamente
-  - [ ] `deleteCategory` com produtos associados retorna `success: false` sem excluir
-  - [ ] `deleteCategory` sem produtos associados remove a categoria do banco
+  - [x] `createCategory({ name: 'Parafusos', slug: 'parafusos' })` cria categoria no banco
+  - [x] `createCategory` com slug duplicado retorna erro sem criar categoria
+  - [x] `updateCategory` atualiza nome e slug corretamente
+  - [x] `deleteCategory` com produtos associados retorna `success: false` sem excluir
+  - [x] `deleteCategory` sem produtos associados remove a categoria do banco
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 
