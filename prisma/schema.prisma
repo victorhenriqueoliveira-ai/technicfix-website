@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +9,100 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  imageUrl  String?
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id               String        @id @default(cuid())
+  name             String
+  slug             String        @unique
+  description      String
+  technicalDetails String?
+  price            Decimal?
+  sku              String?       @unique
+  stock            Int           @default(0)
+  images           String[]
+  featured         Boolean       @default(false)
+  status           ProductStatus @default(ativo)
+  category         Category      @relation(fields: [categoryId], references: [id])
+  categoryId       String
+  leads            Lead[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model Lead {
+  id              String     @id @default(cuid())
+  type            LeadType
+  status          LeadStatus @default(novo)
+  name            String
+  email           String
+  phone           String
+  companyName     String?
+  cnpj            String?
+  estimatedVolume String?
+  desiredDeadline String?
+  message         String?
+  notes           String?
+  product         Product?   @relation(fields: [productId], references: [id])
+  productId       String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  title     String
+  subtitle  String?
+  ctaText   String?
+  ctaUrl    String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteConfig {
+  id                      String   @id @default("singleton")
+  storeName               String   @default("Technicfix")
+  whatsappNumber          String   @default("")
+  contactEmail            String   @default("")
+  technocalhasUrl         String   @default("")
+  technocalhasDescription String   @default("")
+  updatedAt               DateTime @updatedAt
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+enum ProductStatus {
+  ativo
+  inativo
+}
+
+enum LeadType {
+  varejo
+  atacado
+  geral
+}
+
+enum LeadStatus {
+  novo
+  em_atendimento
+  convertido
+  perdido
 }
