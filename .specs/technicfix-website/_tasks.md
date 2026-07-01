@@ -13,10 +13,10 @@
 | 07 | Server Actions de lead + modais de Lead Varejo e Lead Atacado | completed | medium | task_02, task_06 |
 | 08 | Páginas institucionais: Sobre, Contato e Technocalhas | completed | medium | task_04 |
 | 09 | Admin: layout, sidebar, header e dashboard com métricas | completed | medium | task_02, task_03 |
-| 10 | Admin: CRUD de categorias | pending | medium | task_09 |
+| 10 | Admin: CRUD de categorias | completed | medium | task_09 |
 | 11 | Admin: CRUD de produtos + upload de imagens (presigned URL Cloudflare R2) | pending | high | task_09, task_10 |
-| 12 | Admin: CRUD de banners + reordenação drag-and-drop | pending | high | task_09 |
-| 13 | Admin: gestão de leads — listagem, filtros, detalhe, status e notas | pending | medium | task_07, task_09 |
-| 14 | Admin: configurações do site (WhatsApp, e-mail, links Technocalhas) | pending | low | task_09 |
+| 12 | Admin: CRUD de banners + reordenação drag-and-drop | completed | high | task_09 |
+| 13 | Admin: gestão de leads — listagem, filtros, detalhe, status e notas | completed | medium | task_07, task_09 |
+| 14 | Admin: configurações do site (WhatsApp, e-mail, links Technocalhas) | completed | low | task_09 |
 | 15 | SEO: generateMetadata por página, sitemap dinâmico e robots.txt | pending | medium | task_05, task_06, task_08 |
 | 16 | Integração final R2 + next/image: configuração de remotePatterns e validação de URLs | pending | low | task_11, task_12 |
