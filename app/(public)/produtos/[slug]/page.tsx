@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { db } from '@/lib/prisma'
 import { ProductGallery } from '@/components/catalog/ProductGallery'
 
@@ -8,6 +9,27 @@ interface ProductPageProps {
 }
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const product = await db.product.findFirst({
+    where: { slug },
+    select: { name: true, description: true, images: true },
+  })
+
+  if (!product) {
+    return { title: 'Produto não encontrado | Technicfix' }
+  }
+
+  return {
+    title: `${product.name} | Technicfix`,
+    description: product.description?.slice(0, 155) ?? `${product.name} — Technicfix`,
+    openGraph: {
+      title: product.name,
+      images: product.images[0] ? [{ url: product.images[0] }] : [],
+    },
+  }
+}
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params

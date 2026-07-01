@@ -1,10 +1,17 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { db } from '@/lib/prisma'
 import { ProductCard } from '@/components/catalog/ProductCard'
 import { CategoryFilter } from '@/components/catalog/CategoryFilter'
 import { SearchBar } from '@/components/catalog/SearchBar'
 import { Suspense } from 'react'
 import type { ProductSummary } from '@/lib/types'
+
+export const metadata: Metadata = {
+  title: 'Produtos | Technicfix',
+  description:
+    'Catálogo completo de parafusos, fixações e materiais de construção. Encontre o produto ideal para sua obra.',
+}
 
 /** Tipo local para produto retornado pelo Prisma com category incluída */
 interface ProductWithCategory {

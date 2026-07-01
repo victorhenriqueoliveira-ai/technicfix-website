@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { db } from '@/lib/prisma'
 import { Hero } from '@/components/home/Hero'
 import { CategoryGrid } from '@/components/home/CategoryGrid'
@@ -6,6 +7,21 @@ import { TechnocalhasSection } from '@/components/home/TechnocalhasSection'
 import { TestimonialsSection } from '@/components/home/TestimonialsSection'
 import { LeadGeneralForm } from '@/components/home/LeadGeneralForm'
 import type { ProductSummary } from '@/lib/types'
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://technicfix.com.br'
+
+export const metadata: Metadata = {
+  title: 'Technicfix — Parafusos, Fixações e Materiais de Obra',
+  description:
+    'Loja especializada em parafusos, fixações e materiais de construção. Atacado e varejo.',
+  openGraph: {
+    title: 'Technicfix — Parafusos, Fixações e Materiais de Obra',
+    description:
+      'Loja especializada em parafusos, fixações e materiais de construção. Atacado e varejo.',
+    url: siteUrl,
+    images: [{ url: `${siteUrl}/og-image.jpg` }],
+  },
+}
 
 async function getBanners() {
   return db.banner.findMany({
