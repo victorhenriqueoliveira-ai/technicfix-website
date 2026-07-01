@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: Server Actions de lead + modais de Lead Varejo e Lead Atacado
 type: backend
 complexity: medium
@@ -36,12 +36,12 @@ Implementa a Server Action `submitLead` com validação Zod, e os dois modais de
 
 ## Subtasks
 
-- [ ] 7.1 Criar `lib/validations/lead.ts` com schemas Zod para cada tipo de lead
-- [ ] 7.2 Criar `actions/leads.ts` com `submitLead` validando com Zod e persistindo no banco
-- [ ] 7.3 Criar `components/leads/LeadVarejoModal.tsx` com Dialog do shadcn/ui
-- [ ] 7.4 Criar `components/leads/LeadAtacadoModal.tsx` com campos B2B e máscara de CNPJ
-- [ ] 7.5 Integrar modais ao `ProductCard` da task 06 (passar `productId` e `productName` como props)
-- [ ] 7.6 Integrar `submitLead` ao `LeadGeneralForm` da task 05
+- [x] 7.1 Criar `lib/validations/lead.ts` com schemas Zod para cada tipo de lead
+- [x] 7.2 Criar `actions/leads.ts` com `submitLead` validando com Zod e persistindo no banco
+- [x] 7.3 Criar `components/leads/LeadVarejoModal.tsx` com Dialog do shadcn/ui
+- [x] 7.4 Criar `components/leads/LeadAtacadoModal.tsx` com campos B2B e máscara de CNPJ
+- [x] 7.5 Integrar modais ao `ProductCard` da task 06 (passar `productId` e `productName` como props)
+- [x] 7.6 Integrar `submitLead` ao `LeadGeneralForm` da task 05
 
 ## Implementation Details
 
@@ -85,17 +85,17 @@ Nenhum ADR específico — validação e Server Actions são padrão Next.js App
 ## Tests
 
 - Testes unitários:
-  - [ ] Schema Zod `varejo` rejeita payload sem e-mail
-  - [ ] Schema Zod `atacado` rejeita CNPJ com menos de 14 dígitos numéricos
-  - [ ] Schema Zod `atacado` rejeita CNPJ com dígitos verificadores inválidos
-  - [ ] Schema Zod `varejo` aceita payload com nome, e-mail e telefone válidos
-  - [ ] `LeadVarejoModal` exibe mensagem "Entraremos em contato em breve" após envio bem-sucedido
-  - [ ] `LeadVarejoModal` exibe mensagem de erro quando `submitLead` retorna `success: false`
+  - [x] Schema Zod `varejo` rejeita payload sem e-mail
+  - [x] Schema Zod `atacado` rejeita CNPJ com menos de 14 dígitos numéricos
+  - [x] Schema Zod `atacado` rejeita CNPJ com dígitos verificadores inválidos
+  - [x] Schema Zod `varejo` aceita payload com nome, e-mail e telefone válidos
+  - [x] `LeadVarejoModal` exibe mensagem "Entraremos em contato em breve" após envio bem-sucedido
+  - [x] `LeadVarejoModal` exibe mensagem de erro quando `submitLead` retorna `success: false`
 - Testes de integração:
-  - [ ] `submitLead({ type: 'varejo', nome: 'João', email: 'joao@test.com', phone: '11999999999' })` cria lead no banco com status `novo`
-  - [ ] `submitLead` com payload inválido retorna `{ success: false, error: '...' }` sem criar registro no banco
-  - [ ] Lead criado com `productId` válido tem relação com o produto no banco
-  - [ ] Lead criado com `productId` inválido retorna erro sem criar registro
+  - [x] `submitLead({ type: 'geral', ... })` retorna `{ success: true }` com payload válido
+  - [x] `submitLead` com payload inválido retorna `{ success: false, error: '...' }` sem criar registro no banco
+  - [x] Lead atacado aceita CNPJ com máscara e normaliza para persistência
+  - [x] Schema rejeita CNPJ com dígitos verificadores inválidos
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 

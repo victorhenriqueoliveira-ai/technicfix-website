@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Admin: configurações do site (WhatsApp, e-mail, links Technocalhas)"
 type: frontend
 complexity: low
@@ -32,9 +32,9 @@ Implementa a página de configurações do painel admin que permite ao dono atua
 
 ## Subtasks
 
-- [ ] 14.1 Criar `actions/config.ts` com `updateSiteConfig` usando upsert no `SiteConfig` singleton
-- [ ] 14.2 Criar `app/admin/configuracoes/page.tsx` como Server Component que carrega o `SiteConfig` atual e passa para o form
-- [ ] 14.3 Criar `components/admin/config/SiteConfigForm.tsx` com os campos e validação Zod (WhatsApp: 10–11 dígitos numéricos)
+- [x] 14.1 Criar `actions/config.ts` com `updateSiteConfig` usando upsert no `SiteConfig` singleton
+- [x] 14.2 Criar `app/admin/configuracoes/page.tsx` como Server Component que carrega o `SiteConfig` atual e passa para o form
+- [x] 14.3 Criar `components/admin/config/SiteConfigForm.tsx` com os campos e validação Zod (WhatsApp: 10–11 dígitos numéricos)
 
 ## Implementation Details
 
@@ -73,15 +73,15 @@ Nenhum ADR específico para configurações.
 ## Tests
 
 - Testes unitários:
-  - [ ] Schema Zod aceita número de WhatsApp com 10 dígitos (`1134567890`)
-  - [ ] Schema Zod aceita número de WhatsApp com 11 dígitos (`11934567890`)
-  - [ ] Schema Zod rejeita número de WhatsApp com 9 dígitos
-  - [ ] Schema Zod rejeita número de WhatsApp com caracteres não numéricos
+  - [x] Schema Zod aceita número de WhatsApp com 10 dígitos (`1134567890`)
+  - [x] Schema Zod aceita número de WhatsApp com 11 dígitos (`11934567890`)
+  - [x] Schema Zod rejeita número de WhatsApp com 9 dígitos
+  - [x] Schema Zod rejeita número de WhatsApp com caracteres não numéricos
 - Testes de integração:
-  - [ ] `updateSiteConfig({ whatsappNumber: '11987654321' })` salva no banco e é lido corretamente na próxima query
-  - [ ] `updateSiteConfig` executado sem `SiteConfig` existente cria o registro singleton
-  - [ ] `updateSiteConfig` executado com `SiteConfig` existente atualiza sem duplicar
-  - [ ] GET `/admin/configuracoes` retorna 200 e exibe os valores atuais do banco
+  - [x] `updateSiteConfig({ whatsappNumber: '11987654321' })` salva no banco e é lido corretamente na próxima query
+  - [x] `updateSiteConfig` executado sem `SiteConfig` existente cria o registro singleton
+  - [x] `updateSiteConfig` executado com `SiteConfig` existente atualiza sem duplicar
+  - [x] GET `/admin/configuracoes` retorna 200 e exibe os valores atuais do banco
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 

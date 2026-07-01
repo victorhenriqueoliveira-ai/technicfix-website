@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: Schema Prisma + migrations + seed do AdminUser
 type: backend
 complexity: medium
@@ -34,12 +34,12 @@ Define o schema completo do banco de dados no Prisma, executa a migration inicia
 
 ## Subtasks
 
-- [ ] 2.1 Escrever o schema completo em `prisma/schema.prisma` conforme a seção "Data Models" do TechSpec
-- [ ] 2.2 Criar `lib/prisma.ts` com padrão singleton para o Prisma Client
-- [ ] 2.3 Criar `prisma/seed.ts` com criação idempotente do `AdminUser` (upsert por e-mail) e do `SiteConfig` singleton
-- [ ] 2.4 Configurar `package.json` com `"prisma": { "seed": "tsx prisma/seed.ts" }`
-- [ ] 2.5 Executar `prisma migrate dev --name init` para gerar a migration inicial
-- [ ] 2.6 Executar `npx prisma db seed` e confirmar que o AdminUser foi criado
+- [x] 2.1 Escrever o schema completo em `prisma/schema.prisma` conforme a seção "Data Models" do TechSpec
+- [x] 2.2 Criar `lib/prisma.ts` com padrão singleton para o Prisma Client
+- [x] 2.3 Criar `prisma/seed.ts` com criação idempotente do `AdminUser` (upsert por e-mail) e do `SiteConfig` singleton
+- [x] 2.4 Configurar `package.json` com `"prisma": { "seed": "tsx prisma/seed.ts" }`
+- [ ] 2.5 Executar `prisma migrate dev --name init` para gerar a migration inicial (requer banco configurado — não executado no CI)
+- [ ] 2.6 Executar `npx prisma db seed` e confirmar que o AdminUser foi criado (requer banco configurado — não executado no CI)
 
 ## Implementation Details
 

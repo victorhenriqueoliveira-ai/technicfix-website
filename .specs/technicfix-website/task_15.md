@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "SEO: generateMetadata por página, sitemap dinâmico e robots.txt"
 type: frontend
 complexity: medium
@@ -36,11 +36,11 @@ Implementa a camada de SEO do site: metadados dinâmicos (`generateMetadata`) em
 
 ## Subtasks
 
-- [ ] 15.1 Criar `app/robots.ts` bloqueando `/admin/*`
-- [ ] 15.2 Criar `app/sitemap.ts` com queries dinâmicas para produtos e categorias ativos
-- [ ] 15.3 Adicionar `generateMetadata` à homepage (`app/(public)/page.tsx`)
-- [ ] 15.4 Adicionar `generateMetadata` às páginas de produto (`app/(public)/produtos/[slug]/page.tsx`) com dados dinâmicos do banco
-- [ ] 15.5 Adicionar `generateMetadata` às demais páginas públicas (listagem de produtos, categorias, sobre, contato, technocalhas)
+- [x] 15.1 Criar `app/robots.ts` bloqueando `/admin/*`
+- [x] 15.2 Criar `app/sitemap.ts` com queries dinâmicas para produtos e categorias ativos
+- [x] 15.3 Adicionar `generateMetadata` à homepage (`app/(public)/page.tsx`)
+- [x] 15.4 Adicionar `generateMetadata` às páginas de produto (`app/(public)/produtos/[slug]/page.tsx`) com dados dinâmicos do banco
+- [x] 15.5 Adicionar `generateMetadata` às demais páginas públicas (listagem de produtos, categorias, sobre, contato, technocalhas)
 
 ## Implementation Details
 

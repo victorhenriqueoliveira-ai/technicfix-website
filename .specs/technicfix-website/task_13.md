@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Admin: gestão de leads — listagem, filtros, detalhe, status e notas"
 type: frontend
 complexity: medium
@@ -34,10 +34,10 @@ Implementa o painel de visualização e gerenciamento de leads recebidos: listag
 
 ## Subtasks
 
-- [ ] 13.1 Criar `actions/leads-admin.ts` com `updateLeadStatus` e `updateLeadNotes`
-- [ ] 13.2 Criar `app/admin/leads/page.tsx` com tabela paginada, filtros por tipo e status
-- [ ] 13.3 Criar componente de badge de status com cores por valor
-- [ ] 13.4 Criar `app/admin/leads/[id]/page.tsx` com dados completos e formulários de atualização
+- [x] 13.1 Criar `actions/leads-admin.ts` com `updateLeadStatus` e `updateLeadNotes`
+- [x] 13.2 Criar `app/admin/leads/page.tsx` com tabela paginada, filtros por tipo e status
+- [x] 13.3 Criar componente de badge de status com cores por valor
+- [x] 13.4 Criar `app/admin/leads/[id]/page.tsx` com dados completos e formulários de atualização
 
 ## Implementation Details
 

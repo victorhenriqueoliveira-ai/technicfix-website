@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Admin: layout, sidebar, header e dashboard com métricas"
 type: frontend
 complexity: medium
@@ -34,11 +34,11 @@ Implementa a estrutura visual do painel administrativo: layout com sidebar de na
 
 ## Subtasks
 
-- [ ] 9.1 Criar `app/admin/layout.tsx` com verificação de sessão e import de Sidebar + AdminHeader
-- [ ] 9.2 Criar `components/admin/Sidebar.tsx` com navegação e highlight de link ativo
-- [ ] 9.3 Criar `components/admin/AdminHeader.tsx` com nome do usuário e botão de logout
-- [ ] 9.4 Criar `app/admin/page.tsx` com queries paralelas para as 3 métricas do dashboard
-- [ ] 9.5 Criar componente `components/admin/MetricCard.tsx` para os cards de resumo do dashboard
+- [x] 9.1 Criar `app/admin/layout.tsx` com verificação de sessão e import de Sidebar + AdminHeader
+- [x] 9.2 Criar `components/admin/Sidebar.tsx` com navegação e highlight de link ativo
+- [x] 9.3 Criar `components/admin/AdminHeader.tsx` com nome do usuário e botão de logout
+- [x] 9.4 Criar `app/admin/page.tsx` com queries paralelas para as 3 métricas do dashboard
+- [x] 9.5 Criar componente `components/admin/MetricCard.tsx` para os cards de resumo do dashboard
 
 ## Implementation Details
 
@@ -79,14 +79,14 @@ Referencie a seção "System Architecture" do TechSpec para o padrão de verific
 ## Tests
 
 - Testes unitários:
-  - [ ] `Sidebar` renderiza todos os 6 links de navegação
-  - [ ] `Sidebar` aplica classe de ativo ao link correspondente ao pathname atual
-  - [ ] `MetricCard` renderiza título e valor numérico passados como props
-  - [ ] `AdminHeader` renderiza o e-mail do usuário da sessão
+  - [x] `Sidebar` renderiza todos os 6 links de navegação
+  - [x] `Sidebar` aplica classe de ativo ao link correspondente ao pathname atual
+  - [x] `MetricCard` renderiza título e valor numérico passados como props
+  - [x] `AdminHeader` renderiza o e-mail do usuário da sessão
 - Testes de integração:
-  - [ ] GET `/admin` sem sessão retorna redirect 302 para `/admin/login`
-  - [ ] GET `/admin` com sessão válida retorna 200 com os 3 cards de métrica no HTML
-  - [ ] Dashboard mostra 0 leads novos quando o banco está vazio
+  - [x] GET `/admin` sem sessão retorna redirect 302 para `/admin/login`
+  - [x] GET `/admin` com sessão válida retorna 200 com os 3 cards de métrica no HTML
+  - [x] Dashboard mostra 0 leads novos quando o banco está vazio
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 

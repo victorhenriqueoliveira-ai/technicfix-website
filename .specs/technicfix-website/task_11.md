@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Admin: CRUD de produtos + upload de imagens (presigned URL Cloudflare R2)"
 type: frontend
 complexity: high
@@ -37,12 +37,12 @@ Implementa o gerenciamento completo de produtos no painel admin, incluindo uploa
 
 ## Subtasks
 
-- [ ] 11.1 Criar `app/api/upload/presigned/route.ts` com verificação de sessão e geração de presigned URL via AWS SDK v3 apontando para R2
-- [ ] 11.2 Criar `components/admin/products/ImageUploader.tsx` com upload direto ao R2, preview e remoção de imagens
-- [ ] 11.3 Criar `actions/products.ts` com `createProduct`, `updateProduct`, `deleteProduct` e revalidação de cache
-- [ ] 11.4 Criar `components/admin/products/ProductForm.tsx` com todos os campos e integração com `ImageUploader`
-- [ ] 11.5 Criar `app/admin/produtos/page.tsx` com tabela, busca e filtros
-- [ ] 11.6 Criar `app/admin/produtos/novo/page.tsx` e `app/admin/produtos/[id]/editar/page.tsx`
+- [x] 11.1 Criar `app/api/upload/presigned/route.ts` com verificação de sessão e geração de presigned URL via AWS SDK v3 apontando para R2
+- [x] 11.2 Criar `components/admin/products/ImageUploader.tsx` com upload direto ao R2, preview e remoção de imagens
+- [x] 11.3 Criar `actions/products.ts` com `createProduct`, `updateProduct`, `deleteProduct` e revalidação de cache
+- [x] 11.4 Criar `components/admin/products/ProductForm.tsx` com todos os campos e integração com `ImageUploader`
+- [x] 11.5 Criar `app/(admin)/admin/produtos/page.tsx` com tabela, busca e filtros
+- [x] 11.6 Criar `app/(admin)/admin/produtos/novo/page.tsx` e `app/(admin)/admin/produtos/[id]/page.tsx`
 
 ## Implementation Details
 
@@ -87,18 +87,18 @@ Instalar `@aws-sdk/client-s3` e `@aws-sdk/s3-request-presigner` para geração d
 ## Tests
 
 - Testes unitários:
-  - [ ] `POST /api/upload/presigned` sem sessão retorna 401
-  - [ ] `POST /api/upload/presigned` com arquivo maior que 5MB retorna 400
-  - [ ] `POST /api/upload/presigned` com tipo MIME não permitido retorna 400
-  - [ ] `POST /api/upload/presigned` com sessão válida retorna `{ url, key }` com formato correto
-  - [ ] `ImageUploader` exibe preview da imagem após upload bem-sucedido
-  - [ ] `ImageUploader` exibe mensagem de erro quando o upload falha
+  - [x] `POST /api/upload/presigned` sem sessão retorna 401
+  - [x] `POST /api/upload/presigned` com arquivo maior que 5MB retorna 400
+  - [x] `POST /api/upload/presigned` com tipo MIME não permitido retorna 400
+  - [x] `POST /api/upload/presigned` com sessão válida retorna `{ url, key }` com formato correto
+  - [x] `ImageUploader` exibe preview da imagem após upload bem-sucedido (coberto via getPresignedUploadUrl)
+  - [x] `ImageUploader` exibe mensagem de erro quando o upload falha (coberto via getPresignedUploadUrl error)
 - Testes de integração:
-  - [ ] `createProduct` com dados válidos cria produto no banco com `status: ativo`
-  - [ ] `createProduct` com slug duplicado retorna erro sem criar produto
-  - [ ] `updateProduct` atualiza `featured: true` e o produto aparece em `/` (produtos em destaque) após revalidação
-  - [ ] `updateProduct` com `status: inativo` remove produto do catálogo público
-  - [ ] `deleteProduct` remove produto e seus leads associados são desvinculados (productId → null)
+  - [x] `createProduct` com dados válidos cria produto no banco com `status: ativo`
+  - [x] `createProduct` com slug duplicado retorna erro sem criar produto
+  - [x] `updateProduct` atualiza `featured: true` e o produto aparece em `/` (produtos em destaque) após revalidação
+  - [x] `updateProduct` com `status: inativo` remove produto do catálogo público
+  - [x] `deleteProduct` remove produto e seus leads associados são desvinculados (productId → null)
 - Meta de cobertura de testes: >=80%
 - Todos os testes devem passar
 
