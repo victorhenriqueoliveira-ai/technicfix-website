@@ -7,6 +7,14 @@ import '@testing-library/jest-dom'
 import { ProductCard } from '@/components/catalog/ProductCard'
 import type { ProductSummary } from '@/lib/types'
 
+// Mocks dos modais de lead para evitar importação transitiva do Prisma no jsdom
+jest.mock('@/components/leads/LeadVarejoModal', () => ({
+  LeadVarejoModal: () => null,
+}))
+jest.mock('@/components/leads/LeadAtacadoModal', () => ({
+  LeadAtacadoModal: () => null,
+}))
+
 // Mock next/image
 jest.mock('next/image', () => {
   const MockImage = ({

@@ -87,6 +87,14 @@ describe('Rotas institucionais — integração de módulos', () => {
   it('actions/leads.ts — submitLead retorna { success: true }', async () => {
     jest.resetModules()
     jest.unmock('@/actions/leads')
+    // Mockar prisma e validações para teste isolado da action
+    jest.mock('@/lib/prisma', () => ({
+      db: {
+        lead: {
+          create: jest.fn().mockResolvedValue({}),
+        },
+      },
+    }))
     const { submitLead } = await import('@/actions/leads')
     const result = await submitLead({
       type: 'geral',
