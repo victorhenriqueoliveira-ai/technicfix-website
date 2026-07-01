@@ -1,8 +1,10 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { credentialsAuthorize } from '@/lib/credentials-authorize'
+import { authConfig } from './auth.config'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -12,6 +14,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       authorize: credentialsAuthorize,
     }),
   ],
-  session: { strategy: 'jwt', maxAge: 8 * 60 * 60 },
-  pages: { signIn: '/admin/login' },
 })

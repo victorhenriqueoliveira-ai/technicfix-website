@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { db } from '@/lib/prisma'
 import { ProductGallery } from '@/components/catalog/ProductGallery'
+import { ProductCTAs } from '@/components/catalog/ProductCTAs'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
@@ -110,24 +111,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
 
           {/* CTAs */}
-          <div className="flex gap-3 pt-2">
-            <button
-              type="button"
-              className="flex-1 rounded-md border border-orange-500 px-4 py-2 text-sm font-medium text-orange-600 transition-colors hover:bg-orange-50"
-              onClick={() => {}}
-              data-testid="cta-interesse"
-            >
-              Tenho interesse
-            </button>
-            <button
-              type="button"
-              className="flex-1 rounded-md bg-orange-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600"
-              onClick={() => {}}
-              data-testid="cta-orcamento"
-            >
-              Solicitar orçamento
-            </button>
-          </div>
+          <ProductCTAs productId={product.id} productName={product.name} />
 
           {/* Descrição */}
           {product.description && (

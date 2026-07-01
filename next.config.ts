@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: '**.r2.dev',
         pathname: '/**',
       },
+      {
+        protocol: 'https' as const,
+        hostname: 'brasilfuso.com.br',
+        pathname: '/**',
+      },
     ],
   },
 };
