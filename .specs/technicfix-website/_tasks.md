@@ -18,5 +18,5 @@
 | 12 | Admin: CRUD de banners + reordenação drag-and-drop | completed | high | task_09 |
 | 13 | Admin: gestão de leads — listagem, filtros, detalhe, status e notas | completed | medium | task_07, task_09 |
 | 14 | Admin: configurações do site (WhatsApp, e-mail, links Technocalhas) | completed | low | task_09 |
-| 15 | SEO: generateMetadata por página, sitemap dinâmico e robots.txt | pending | medium | task_05, task_06, task_08 |
-| 16 | Integração final R2 + next/image: configuração de remotePatterns e validação de URLs | pending | low | task_11, task_12 |
+| 15 | SEO: generateMetadata por página, sitemap dinâmico e robots.txt | completed | medium | task_05, task_06, task_08 |
+| 16 | Integração final R2 + next/image: configuração de remotePatterns e validação de URLs | completed | low | task_11, task_12 |
