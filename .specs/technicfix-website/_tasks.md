@@ -10,9 +10,9 @@
 | 04 | Layout público: Header, Footer e botão WhatsApp flutuante | completed | medium | task_01 |
 | 05 | Homepage: Hero rotativo, Categorias, Produtos em Destaque, Technocalhas, Depoimentos, Formulário de Lead Geral | completed | high | task_02, task_04 |
 | 06 | Catálogo de produtos: listagem paginada, filtros por categoria, busca e página de detalhe | completed | high | task_02, task_04 |
-| 07 | Server Actions de lead + modais de Lead Varejo e Lead Atacado | pending | medium | task_02, task_06 |
+| 07 | Server Actions de lead + modais de Lead Varejo e Lead Atacado | completed | medium | task_02, task_06 |
 | 08 | Páginas institucionais: Sobre, Contato e Technocalhas | completed | medium | task_04 |
-| 09 | Admin: layout, sidebar, header e dashboard com métricas | pending | medium | task_02, task_03 |
+| 09 | Admin: layout, sidebar, header e dashboard com métricas | completed | medium | task_02, task_03 |
 | 10 | Admin: CRUD de categorias | pending | medium | task_09 |
 | 11 | Admin: CRUD de produtos + upload de imagens (presigned URL Cloudflare R2) | pending | high | task_09, task_10 |
 | 12 | Admin: CRUD de banners + reordenação drag-and-drop | pending | high | task_09 |
