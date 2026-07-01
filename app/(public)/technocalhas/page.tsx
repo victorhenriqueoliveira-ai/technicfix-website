@@ -3,7 +3,7 @@ import { db } from '@/lib/prisma'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 
 export const metadata = {
-  title: 'Technocalhas | Technicfix',
+  title: 'Technocalhas | TechnicFix',
   description: 'Conheça a Technocalhas — empresa especializada em calhas e perfis metálicos.',
 }
 
@@ -15,63 +15,89 @@ export default async function TechnocalhasPage() {
   const ctaUrl = config?.technocalhasUrl || '/contato'
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <Breadcrumb items={[{ label: 'Technocalhas' }]} />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-brand-amber px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <Breadcrumb items={[{ label: 'Technocalhas' }]} />
+          <div className="mt-6 flex flex-col sm:flex-row items-center gap-6">
+            <div
+              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-brand-navy shadow-lg"
+              aria-label="Logo Technocalhas"
+              data-testid="technocalhas-logo"
+            >
+              <span className="text-2xl font-extrabold text-brand-amber">TC</span>
+            </div>
+            <div>
+              <h1 className="text-4xl font-extrabold text-brand-navy">Technocalhas</h1>
+              <p className="mt-1 text-brand-navy/70 text-sm font-medium">
+                Parceira especializada em calhas e perfis metálicos
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <div className="flex flex-col items-center text-center">
-        {/* Logo placeholder */}
-        <div
-          className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-orange-500"
-          aria-label="Logo Technocalhas"
-          data-testid="technocalhas-logo"
-        >
-          <span className="text-3xl font-bold text-white">TC</span>
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Descrição */}
+        <div className="mb-10 rounded-2xl bg-brand-navy p-8 text-center shadow-lg">
+          <p
+            className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed"
+            data-testid="technocalhas-description"
+          >
+            {description}
+          </p>
         </div>
 
-        <h1 className="mb-4 text-3xl font-bold text-gray-900">Technocalhas</h1>
-
-        <p
-          className="mb-8 max-w-2xl text-lg text-gray-600"
-          data-testid="technocalhas-description"
-        >
-          {description}
-        </p>
-
         {/* Serviços */}
-        <section aria-labelledby="servicos-heading" className="mb-10 w-full max-w-3xl">
-          <h2 id="servicos-heading" className="mb-6 text-xl font-semibold text-gray-800">
-            Nossos Serviços
-          </h2>
+        <section aria-labelledby="servicos-heading" className="mb-10">
+          <div className="text-center mb-8">
+            <span className="inline-block text-xs font-bold uppercase tracking-widest text-brand-amber mb-2">
+              O que oferecemos
+            </span>
+            <h2 id="servicos-heading" className="text-3xl font-extrabold text-brand-navy">
+              Nossos Serviços
+            </h2>
+          </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            <div className="rounded-lg border border-orange-100 bg-orange-50 p-5">
-              <h3 className="mb-2 font-semibold text-gray-800">Calhas Metálicas</h3>
-              <p className="text-sm text-gray-600">
-                Fabricação e instalação de calhas em aço galvanizado para telhados e obras industriais.
-              </p>
-            </div>
-            <div className="rounded-lg border border-orange-100 bg-orange-50 p-5">
-              <h3 className="mb-2 font-semibold text-gray-800">Perfis Estruturais</h3>
-              <p className="text-sm text-gray-600">
-                Perfis metálicos para estruturas e coberturas, com corte e dobra sob medida.
-              </p>
-            </div>
-            <div className="rounded-lg border border-orange-100 bg-orange-50 p-5">
-              <h3 className="mb-2 font-semibold text-gray-800">Projetos Especiais</h3>
-              <p className="text-sm text-gray-600">
-                Soluções personalizadas para projetos industriais, comerciais e residenciais.
-              </p>
-            </div>
+            {[
+              {
+                titulo: 'Calhas Metálicas',
+                desc: 'Fabricação e instalação de calhas em aço galvanizado para telhados e obras industriais.',
+              },
+              {
+                titulo: 'Perfis Estruturais',
+                desc: 'Perfis metálicos para estruturas e coberturas, com corte e dobra sob medida.',
+              },
+              {
+                titulo: 'Projetos Especiais',
+                desc: 'Soluções personalizadas para projetos industriais, comerciais e residenciais.',
+              },
+            ].map((servico) => (
+              <div
+                key={servico.titulo}
+                className="rounded-2xl bg-white p-6 shadow-sm border-2 border-transparent hover:border-brand-amber transition-colors"
+              >
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-amber/10">
+                  <span className="h-2.5 w-2.5 rounded-full bg-brand-amber" />
+                </div>
+                <h3 className="mb-2 font-bold text-brand-navy">{servico.titulo}</h3>
+                <p className="text-sm text-brand-navy/60 leading-relaxed">{servico.desc}</p>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* CTA */}
-        <Link
-          href={ctaUrl}
-          className="rounded-md bg-orange-500 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-orange-600"
-          data-testid="technocalhas-cta"
-        >
-          Entre em Contato
-        </Link>
+        <div className="text-center">
+          <Link
+            href={ctaUrl}
+            className="inline-flex items-center gap-2 rounded-full bg-brand-navy px-8 py-4 text-base font-bold text-white transition-all hover:bg-brand-navy-light hover:scale-105"
+            data-testid="technocalhas-cta"
+          >
+            Entre em Contato
+          </Link>
+        </div>
       </div>
     </div>
   )

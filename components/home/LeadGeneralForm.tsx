@@ -96,7 +96,7 @@ export function LeadGeneralForm() {
               type="text"
               required
               placeholder="Seu nome completo"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
             />
           </div>
 
@@ -110,7 +110,7 @@ export function LeadGeneralForm() {
               type="tel"
               required
               placeholder="(11) 99999-9999"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
             />
           </div>
 
@@ -124,7 +124,7 @@ export function LeadGeneralForm() {
               type="email"
               required
               placeholder="seuemail@exemplo.com"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
             />
           </div>
 
@@ -137,7 +137,7 @@ export function LeadGeneralForm() {
               name="message"
               rows={4}
               placeholder="Como podemos ajudá-lo?"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200 resize-none"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20 resize-none"
             />
           </div>
 
@@ -153,7 +153,7 @@ export function LeadGeneralForm() {
           <button
             type="submit"
             disabled={formState === 'loading'}
-            className="w-full bg-orange-600 text-white font-semibold py-3 rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full bg-brand-amber text-brand-navy font-bold py-3 rounded-xl hover:bg-brand-amber-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             data-testid="submit-button"
           >
             {formState === 'loading' ? 'Enviando...' : 'Enviar Mensagem'}

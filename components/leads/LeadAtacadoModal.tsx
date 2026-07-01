@@ -148,7 +148,7 @@ export function LeadAtacadoModal({
                 type="text"
                 required
                 placeholder="Seu nome completo"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -165,7 +165,7 @@ export function LeadAtacadoModal({
                 type="email"
                 required
                 placeholder="contato@empresa.com.br"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -182,7 +182,7 @@ export function LeadAtacadoModal({
                 type="tel"
                 required
                 placeholder="(11) 99999-9999"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -199,7 +199,7 @@ export function LeadAtacadoModal({
                 type="text"
                 required
                 placeholder="Empresa LTDA"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -219,7 +219,7 @@ export function LeadAtacadoModal({
                 value={cnpjValue}
                 onChange={handleCnpjChange}
                 maxLength={18}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
                 data-testid="cnpj-input"
               />
             </div>
@@ -236,7 +236,7 @@ export function LeadAtacadoModal({
                 name="estimatedVolume"
                 type="text"
                 placeholder="Ex: 500 unidades/mês"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -252,7 +252,7 @@ export function LeadAtacadoModal({
                 name="desiredDeadline"
                 type="text"
                 placeholder="Ex: 30 dias"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
 
@@ -268,7 +268,7 @@ export function LeadAtacadoModal({
                 name="message"
                 rows={3}
                 placeholder="Detalhes do seu pedido ou dúvidas"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200 resize-none"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20 resize-none"
               />
             </div>
 
@@ -284,7 +284,7 @@ export function LeadAtacadoModal({
             <button
               type="submit"
               disabled={formState === 'loading'}
-              className="w-full rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-orange-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full rounded-xl bg-brand-amber px-4 py-2.5 text-sm font-bold text-brand-navy hover:bg-brand-amber-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               data-testid="submit-button"
             >
               {formState === 'loading' ? 'Enviando...' : 'Solicitar orçamento'}
