@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 title: "Setup do projeto: Next.js, Tailwind, shadcn/ui, Prisma, variáveis de ambiente"
 type: infra
 complexity: low
@@ -35,12 +35,12 @@ Inicializa o repositório com toda a infraestrutura de desenvolvimento: Next.js 
 
 ## Subtasks
 
-- [ ] 1.1 Inicializar projeto com `create-next-app` (TypeScript, Tailwind, App Router, sem src/, com alias `@`)
-- [ ] 1.2 Instalar e inicializar shadcn/ui (`npx shadcn@latest init`)
-- [ ] 1.3 Instalar Prisma, `@prisma/client` e `@neondatabase/serverless`; inicializar com `npx prisma init`
-- [ ] 1.4 Criar `.env.example` com todas as variáveis: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL`, `NEXT_PUBLIC_WHATSAPP_NUMBER`
-- [ ] 1.5 Criar estrutura de pastas vazia conforme TechSpec: `app/(public)/`, `app/admin/`, `app/api/`, `lib/`, `actions/`, `components/`
-- [ ] 1.6 Criar `lib/types.ts` com os tipos centrais definidos na seção "Core Interfaces" do TechSpec
+- [x] 1.1 Inicializar projeto com `create-next-app` (TypeScript, Tailwind, App Router, sem src/, com alias `@`)
+- [x] 1.2 Instalar e inicializar shadcn/ui (`npx shadcn@latest init`)
+- [x] 1.3 Instalar Prisma, `@prisma/client` e `@neondatabase/serverless`; inicializar com `npx prisma init`
+- [x] 1.4 Criar `.env.example` com todas as variáveis: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL`, `NEXT_PUBLIC_WHATSAPP_NUMBER`
+- [x] 1.5 Criar estrutura de pastas vazia conforme TechSpec: `app/(public)/`, `app/admin/`, `app/api/`, `lib/`, `actions/`, `components/`
+- [x] 1.6 Criar `lib/types.ts` com os tipos centrais definidos na seção "Core Interfaces" do TechSpec
 
 ## Implementation Details
 
@@ -84,8 +84,8 @@ O `lib/types.ts` exporta `LeadType`, `LeadStatus`, `ProductStatus`, `ProductSumm
 ## Tests
 
 - Testes unitários:
-  - [ ] `lib/types.ts` exporta todos os tipos esperados: `LeadType`, `LeadStatus`, `ProductStatus`, `ProductSummary`, `LeadPayload`, `SiteConfig`
-  - [ ] TypeScript compila sem erros (`tsc --noEmit` retorna 0)
+  - [x] `lib/types.ts` exporta todos os tipos esperados: `LeadType`, `LeadStatus`, `ProductStatus`, `ProductSummary`, `LeadPayload`, `SiteConfig`
+  - [x] TypeScript compila sem erros (`tsc --noEmit` retorna 0)
   - [ ] `next build` completa sem erros com o projeto base vazio
 - Testes de integração:
   - [ ] `next dev` sobe sem erros e a rota `/` retorna 200
