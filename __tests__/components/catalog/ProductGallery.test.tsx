@@ -35,7 +35,7 @@ describe('ProductGallery', () => {
   it('renderiza o placeholder quando images[] está vazio', () => {
     render(<ProductGallery images={[]} productName="Produto Teste" />)
     expect(screen.getByTestId('gallery-placeholder')).toBeInTheDocument()
-    expect(screen.getByText('Sem imagem')).toBeInTheDocument()
+    expect(screen.getByTestId('product-image-placeholder')).toBeInTheDocument()
   })
 
   it('renderiza a imagem principal com a primeira imagem', () => {

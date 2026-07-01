@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { isValidUrl } from '@/lib/utils/image'
 
 export interface BannerData {
   id: string
@@ -50,8 +51,8 @@ export function Hero({ banners }: HeroProps) {
       data-testid="hero-section"
     >
       <div className="relative min-h-[400px] md:min-h-[500px] flex items-center justify-center">
-        {/* Imagem de fundo (se existir URL) */}
-        {banner.imageUrl ? (
+        {/* Imagem de fundo (se existir URL válida) */}
+        {isValidUrl(banner.imageUrl) ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={banner.imageUrl}

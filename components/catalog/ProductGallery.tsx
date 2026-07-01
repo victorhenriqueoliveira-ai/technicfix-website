@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { isValidUrl } from '@/lib/utils/image'
+import { ProductImagePlaceholder } from '@/components/ui/ProductImagePlaceholder'
 
 interface ProductGalleryProps {
   images: string[]
@@ -11,14 +13,16 @@ interface ProductGalleryProps {
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0)
 
-  if (images.length === 0) {
+  // Filtra apenas URLs válidas
+  const validImages = images.filter(isValidUrl)
+
+  if (validImages.length === 0) {
     return (
       <div
-        className="flex aspect-square w-full items-center justify-center rounded-lg bg-gray-200"
-        aria-label="Sem imagem disponível"
+        className="aspect-square w-full rounded-lg overflow-hidden"
         data-testid="gallery-placeholder"
       >
-        <span className="text-sm text-gray-500">Sem imagem</span>
+        <ProductImagePlaceholder label="Sem imagem disponível" />
       </div>
     )
   }
@@ -28,19 +32,18 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
       {/* Imagem principal */}
       <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
         <Image
-          src={images[activeIndex]}
+          src={validImages[activeIndex]}
           alt={`${productName} — imagem ${activeIndex + 1}`}
           fill
-          unoptimized
           className="object-cover"
           data-testid="gallery-main-image"
         />
       </div>
 
       {/* Miniaturas */}
-      {images.length > 1 && (
+      {validImages.length > 1 && (
         <div className="flex gap-2 overflow-x-auto pb-1" role="list" aria-label="Miniaturas">
-          {images.map((src, idx) => (
+          {validImages.map((src, idx) => (
             <button
               key={idx}
               type="button"
@@ -59,7 +62,6 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 src={src}
                 alt={`${productName} — miniatura ${idx + 1}`}
                 fill
-                unoptimized
                 className="object-cover"
               />
             </button>

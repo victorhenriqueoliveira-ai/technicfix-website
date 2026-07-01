@@ -93,10 +93,22 @@ describe('ProductCard', () => {
     expect(screen.queryByText(/R\$/)).not.toBeInTheDocument()
   })
 
-  it('renderiza placeholder quando não há imagem', () => {
+  it('renderiza ProductImagePlaceholder quando não há imagem', () => {
     const product = { ...mockProduct, images: [] }
     render(<ProductCard product={product} />)
-    expect(screen.getByText('Sem imagem')).toBeInTheDocument()
+    expect(screen.getByTestId('product-image-placeholder')).toBeInTheDocument()
+  })
+
+  it('renderiza next/image com src correto quando images[0] existe', () => {
+    render(<ProductCard product={mockProduct} />)
+    const img = screen.getByRole('img', { name: mockProduct.name })
+    expect(img).toHaveAttribute('src', 'https://example.com/parafuso.jpg')
+  })
+
+  it('renderiza ProductImagePlaceholder quando URL de imagem é inválida', () => {
+    const product = { ...mockProduct, images: ['nao-e-url'] }
+    render(<ProductCard product={product} />)
+    expect(screen.getByTestId('product-image-placeholder')).toBeInTheDocument()
   })
 
   it('link do produto aponta para /produtos/slug', () => {

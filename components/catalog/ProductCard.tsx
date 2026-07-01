@@ -4,16 +4,18 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { getProductImageSrc } from '@/lib/utils/image'
 import type { ProductSummary } from '@/lib/types'
 import { LeadVarejoModal } from '@/components/leads/LeadVarejoModal'
 import { LeadAtacadoModal } from '@/components/leads/LeadAtacadoModal'
+import { ProductImagePlaceholder } from '@/components/ui/ProductImagePlaceholder'
 
 interface ProductCardProps {
   product: ProductSummary
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const imageSrc = product.images[0] ?? null
+  const imageSrc = getProductImageSrc(product.images)
   const [varejoOpen, setVarejoOpen] = useState(false)
   const [atacadoOpen, setAtacadoOpen] = useState(false)
 
@@ -27,13 +29,10 @@ export function ProductCard({ product }: ProductCardProps) {
               src={imageSrc}
               alt={product.name}
               fill
-              unoptimized
               className="object-cover transition-transform hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gray-200">
-              <span className="text-sm text-gray-400">Sem imagem</span>
-            </div>
+            <ProductImagePlaceholder label={`Sem imagem para ${product.name}`} />
           )}
         </Link>
 
