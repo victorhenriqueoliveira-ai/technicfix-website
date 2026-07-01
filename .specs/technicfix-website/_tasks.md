@@ -14,7 +14,7 @@
 | 08 | Páginas institucionais: Sobre, Contato e Technocalhas | completed | medium | task_04 |
 | 09 | Admin: layout, sidebar, header e dashboard com métricas | completed | medium | task_02, task_03 |
 | 10 | Admin: CRUD de categorias | completed | medium | task_09 |
-| 11 | Admin: CRUD de produtos + upload de imagens (presigned URL Cloudflare R2) | pending | high | task_09, task_10 |
+| 11 | Admin: CRUD de produtos + upload de imagens (presigned URL Cloudflare R2) | completed | high | task_09, task_10 |
 | 12 | Admin: CRUD de banners + reordenação drag-and-drop | completed | high | task_09 |
 | 13 | Admin: gestão de leads — listagem, filtros, detalhe, status e notas | completed | medium | task_07, task_09 |
 | 14 | Admin: configurações do site (WhatsApp, e-mail, links Technocalhas) | completed | low | task_09 |
