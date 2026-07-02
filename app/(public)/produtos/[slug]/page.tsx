@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { db } from '@/lib/prisma'
 import { ProductGallery } from '@/components/catalog/ProductGallery'
 import { ProductCTAs } from '@/components/catalog/ProductCTAs'
+import { RelatedProducts } from '@/components/catalog/RelatedProducts'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
@@ -35,22 +36,29 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
 
-  const product = await db.product.findFirst({
-    where: { slug, status: 'ativo' },
-    include: { category: true },
-  })
+  const [product, siteConfig] = await Promise.all([
+    db.product.findFirst({
+      where: { slug, status: 'ativo' },
+      include: { category: true },
+    }),
+    db.siteConfig.findUnique({ where: { id: 'singleton' } }),
+  ])
 
   if (!product) {
     notFound()
   }
 
-  const priceFormatted =
-    product.price !== null
+  const whatsappNumber = siteConfig?.whatsappNumber ?? ''
+
+  // Exibe preço formatado quando showPrice=true; caso contrário exibe "Sob consulta"
+  const priceDisplay = product.showPrice
+    ? product.price !== null
       ? Number(product.price).toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         })
       : null
+    : 'Sob consulta'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -104,16 +112,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {product.name}
             </h1>
 
-            {/* Preço */}
-            {priceFormatted && (
+            {/* Preço ou "Sob consulta" */}
+            {priceDisplay && (
               <p className="text-2xl font-extrabold text-brand-navy" data-testid="product-price">
-                {priceFormatted}
+                {priceDisplay}
               </p>
             )}
 
             {/* CTAs */}
             <div className="rounded-2xl bg-brand-navy/5 p-4 border border-brand-navy/10">
-              <ProductCTAs productId={product.id} productName={product.name} />
+              <ProductCTAs
+                productId={product.id}
+                productName={product.name}
+                productType={product.productType}
+                whatsappNumber={whatsappNumber}
+                showPrice={product.showPrice}
+                stock={product.stock}
+              />
             </div>
 
             {/* Descrição */}
@@ -140,6 +155,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
           </div>
         </div>
+
+        {/* Produtos Relacionados */}
+        <RelatedProducts
+          productId={product.id}
+          categoryId={product.categoryId}
+          relatedProductIds={product.relatedProductIds}
+        />
       </div>
     </div>
   )
