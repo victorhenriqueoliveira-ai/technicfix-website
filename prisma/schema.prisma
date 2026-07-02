@@ -21,22 +21,36 @@ model Category {
 }
 
 model Product {
-  id               String        @id @default(cuid())
-  name             String
-  slug             String        @unique
-  description      String
-  technicalDetails String?
-  price            Decimal?
-  sku              String?       @unique
-  stock            Int           @default(0)
-  images           String[]
-  featured         Boolean       @default(false)
-  status           ProductStatus @default(ativo)
-  category         Category      @relation(fields: [categoryId], references: [id])
-  categoryId       String
-  leads            Lead[]
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  id                String        @id @default(cuid())
+  name              String
+  slug              String        @unique
+  description       String
+  technicalDetails  String?
+  price             Decimal?
+  sku               String?       @unique
+  stock             Int           @default(0)
+  images            String[]
+  featured          Boolean       @default(false)
+  status            ProductStatus @default(ativo)
+  showPrice         Boolean       @default(true)
+  productType       ProductType   @default(ambos)
+  relatedProductIds String[]      @default([])
+  category          Category      @relation(fields: [categoryId], references: [id])
+  categoryId        String
+  leads             Lead[]
+  sales             Sale[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model Sale {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  buyerType LeadType
+  notes     String?
+  createdAt DateTime @default(now())
 }
 
 model Lead {
@@ -104,4 +118,10 @@ enum LeadStatus {
   em_atendimento
   convertido
   perdido
+}
+
+enum ProductType {
+  varejo
+  atacado
+  ambos
 }

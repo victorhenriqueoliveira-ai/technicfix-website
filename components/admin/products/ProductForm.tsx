@@ -11,9 +11,15 @@ interface Category {
   name: string
 }
 
+interface RelatedProductOption {
+  id: string
+  name: string
+}
+
 interface ProductFormProps {
   categories: Category[]
   action: (formData: FormData) => Promise<ProductActionResult>
+  allProducts?: RelatedProductOption[]
   initialData?: {
     id: string
     name: string
@@ -27,10 +33,13 @@ interface ProductFormProps {
     featured: boolean
     status: 'ativo' | 'inativo'
     images: string[]
+    showPrice: boolean
+    productType: 'varejo' | 'atacado' | 'ambos'
+    relatedProductIds: string[]
   }
 }
 
-export function ProductForm({ categories, action, initialData }: ProductFormProps) {
+export function ProductForm({ categories, action, allProducts = [], initialData }: ProductFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -39,6 +48,9 @@ export function ProductForm({ categories, action, initialData }: ProductFormProp
   const [slug, setSlug] = useState(initialData?.slug ?? '')
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(!!initialData?.slug)
   const [images, setImages] = useState<string[]>(initialData?.images ?? [])
+  const [selectedRelatedIds, setSelectedRelatedIds] = useState<string[]>(
+    initialData?.relatedProductIds ?? []
+  )
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newName = e.target.value
@@ -60,6 +72,7 @@ export function ProductForm({ categories, action, initialData }: ProductFormProp
     const formData = new FormData(e.currentTarget)
     formData.set('slug', slug)
     formData.set('images', JSON.stringify(images))
+    formData.set('relatedProductIds', JSON.stringify(selectedRelatedIds))
 
     startTransition(async () => {
       const result = await action(formData)
@@ -274,6 +287,72 @@ export function ProductForm({ categories, action, initialData }: ProductFormProp
         </label>
         <ImageUploader images={images} onChange={setImages} />
       </div>
+
+      {/* Exibir preço */}
+      <div className="flex items-center gap-2">
+        <input
+          id="showPrice"
+          name="showPrice"
+          type="checkbox"
+          defaultChecked={initialData?.showPrice ?? true}
+          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        />
+        <label htmlFor="showPrice" className="cursor-pointer text-sm font-medium text-gray-700">
+          Exibir preço
+          <span className="ml-1 text-xs font-normal text-gray-400">(desmarque para "Sob consulta")</span>
+        </label>
+      </div>
+
+      {/* Tipo de público */}
+      <div>
+        <label htmlFor="productType" className="mb-1 block text-sm font-medium text-gray-700">
+          Tipo de público
+        </label>
+        <select
+          id="productType"
+          name="productType"
+          defaultValue={initialData?.productType ?? 'ambos'}
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="ambos">Ambos</option>
+          <option value="varejo">Varejo</option>
+          <option value="atacado">Atacado</option>
+        </select>
+      </div>
+
+      {/* Produtos relacionados */}
+      {allProducts.length > 0 && (
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Produtos relacionados
+            <span className="ml-1 text-xs font-normal text-gray-400">(opcional)</span>
+          </label>
+          <div className="max-h-48 overflow-y-auto rounded-md border border-gray-300 p-2">
+            {allProducts
+              .filter((p) => p.id !== initialData?.id)
+              .map((p) => (
+                <label key={p.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    checked={selectedRelatedIds.includes(p.id)}
+                    onChange={(e) => {
+                      setSelectedRelatedIds((prev) =>
+                        e.target.checked ? [...prev, p.id] : prev.filter((id) => id !== p.id)
+                      )
+                    }}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">{p.name}</span>
+                </label>
+              ))}
+          </div>
+          <p className="mt-1 text-xs text-gray-500">
+            {selectedRelatedIds.length > 0
+              ? `${selectedRelatedIds.length} produto(s) selecionado(s)`
+              : 'Nenhum produto relacionado selecionado'}
+          </p>
+        </div>
+      )}
 
       {/* Ações */}
       <div className="flex gap-3 pt-2">

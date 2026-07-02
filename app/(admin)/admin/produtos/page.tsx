@@ -2,6 +2,30 @@ import Link from 'next/link'
 import { db } from '@/lib/prisma'
 import { DeleteProductButton } from '@/components/admin/products/DeleteProductButton'
 
+/**
+ * Retorna as props visuais do badge de estoque conforme o nível.
+ * Exportada para facilitar testes unitários.
+ */
+export function getStockDisplay(stock: number): { className: string; text: string; hasBadge: boolean } {
+  if (stock === 0) {
+    return {
+      className:
+        'inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-red-100 text-red-800',
+      text: 'Esgotado',
+      hasBadge: true,
+    }
+  }
+  if (stock <= 5) {
+    return {
+      className:
+        'inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800',
+      text: String(stock),
+      hasBadge: true,
+    }
+  }
+  return { className: 'text-gray-500', text: String(stock), hasBadge: false }
+}
+
 interface ProdutosPageProps {
   searchParams: Promise<{
     busca?: string
@@ -150,8 +174,11 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
                         <span className="text-gray-300">—</span>
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                      {product.stock}
+                    <td className="whitespace-nowrap px-4 py-4 text-sm">
+                      {(() => {
+                        const { className, text } = getStockDisplay(product.stock)
+                        return <span className={className}>{text}</span>
+                      })()}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-sm">
                       <span
