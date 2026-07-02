@@ -37,13 +37,14 @@ jest.mock('lucide-react', () => ({
   Tag: () => <svg data-testid="icon-tag" />,
   Image: () => <svg data-testid="icon-image" />,
   Users: () => <svg data-testid="icon-users" />,
+  ShoppingCart: () => <svg data-testid="icon-shopping-cart" />,
   Settings: () => <svg data-testid="icon-settings" />,
 }))
 
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 
 describe('AdminSidebar', () => {
-  it('renderiza todos os 6 links de navegação', () => {
+  it('renderiza todos os 7 links de navegação incluindo Vendas', () => {
     mockUsePathname.mockReturnValue('/admin')
     render(<AdminSidebar />)
 
@@ -52,6 +53,7 @@ describe('AdminSidebar', () => {
     expect(screen.getByText('Categorias')).toBeInTheDocument()
     expect(screen.getByText('Banners')).toBeInTheDocument()
     expect(screen.getByText('Leads')).toBeInTheDocument()
+    expect(screen.getByText('Vendas')).toBeInTheDocument()
     expect(screen.getByText('Configurações')).toBeInTheDocument()
   })
 
@@ -79,7 +81,23 @@ describe('AdminSidebar', () => {
     expect(dashboardLink).not.toHaveAttribute('aria-current', 'page')
   })
 
-  it('renderiza os hrefs corretos para os 6 links', () => {
+  it('item "Vendas" fica ativo quando pathname começa com /admin/vendas', () => {
+    mockUsePathname.mockReturnValue('/admin/vendas')
+    render(<AdminSidebar />)
+
+    const vendasLink = screen.getByText('Vendas').closest('a')
+    expect(vendasLink).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('item "Vendas" não fica ativo quando pathname é /admin', () => {
+    mockUsePathname.mockReturnValue('/admin')
+    render(<AdminSidebar />)
+
+    const vendasLink = screen.getByText('Vendas').closest('a')
+    expect(vendasLink).not.toHaveAttribute('aria-current', 'page')
+  })
+
+  it('renderiza os hrefs corretos para os 7 links', () => {
     mockUsePathname.mockReturnValue('/admin')
     render(<AdminSidebar />)
 
@@ -89,6 +107,7 @@ describe('AdminSidebar', () => {
       { label: 'Categorias', href: '/admin/categorias' },
       { label: 'Banners', href: '/admin/banners' },
       { label: 'Leads', href: '/admin/leads' },
+      { label: 'Vendas', href: '/admin/vendas' },
       { label: 'Configurações', href: '/admin/configuracoes' },
     ]
 

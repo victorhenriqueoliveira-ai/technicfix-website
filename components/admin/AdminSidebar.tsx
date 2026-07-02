@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, Tag, Image, Users, Settings } from 'lucide-react'
+import { LayoutDashboard, Package, Tag, Image, Users, Settings, ShoppingCart } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
@@ -11,6 +11,7 @@ const navLinks = [
   { href: '/admin/categorias', label: 'Categorias', icon: Tag },
   { href: '/admin/banners', label: 'Banners', icon: Image },
   { href: '/admin/leads', label: 'Leads', icon: Users },
+  { href: '/admin/vendas', label: 'Vendas', icon: ShoppingCart },
   { href: '/admin/configuracoes', label: 'Configurações', icon: Settings },
 ]
 
