@@ -24,6 +24,9 @@ const productSchema = z.object({
   featured: z.boolean().default(false),
   status: z.enum(['ativo', 'inativo']).default('ativo'),
   images: z.array(z.string().url()).default([]),
+  showPrice: z.boolean().default(true),
+  productType: z.enum(['varejo', 'atacado', 'ambos']).default('ambos'),
+  relatedProductIds: z.array(z.string()).default([]),
 })
 
 export type ProductActionResult =
@@ -34,6 +37,7 @@ export type ProductActionResult =
 
 function parseFormData(formData: FormData) {
   const imagesRaw = formData.get('images') as string | null
+  const relatedRaw = formData.get('relatedProductIds') as string | null
   return {
     name: formData.get('name') as string,
     slug: (formData.get('slug') as string) || slugify(formData.get('name') as string),
@@ -46,6 +50,9 @@ function parseFormData(formData: FormData) {
     featured: formData.get('featured') === 'true',
     status: (formData.get('status') as 'ativo' | 'inativo') || 'ativo',
     images: imagesRaw ? (JSON.parse(imagesRaw) as string[]) : [],
+    showPrice: formData.get('showPrice') === 'on',
+    productType: (formData.get('productType') as 'varejo' | 'atacado' | 'ambos') || 'ambos',
+    relatedProductIds: relatedRaw ? (JSON.parse(relatedRaw) as string[]) : [],
   }
 }
 
@@ -65,7 +72,7 @@ export async function createProduct(formData: FormData): Promise<ProductActionRe
     return { success: false, error: result.error.issues[0].message }
   }
 
-  const { name, slug, description, technicalDetails, price, sku, stock, categoryId, featured, status, images } =
+  const { name, slug, description, technicalDetails, price, sku, stock, categoryId, featured, status, images, showPrice, productType, relatedProductIds } =
     result.data
 
   const existing = await db.product.findUnique({ where: { slug } })
@@ -93,6 +100,9 @@ export async function createProduct(formData: FormData): Promise<ProductActionRe
       featured,
       status,
       images,
+      showPrice,
+      productType,
+      relatedProductIds,
     },
   })
 
@@ -110,7 +120,7 @@ export async function updateProduct(id: string, formData: FormData): Promise<Pro
     return { success: false, error: result.error.issues[0].message }
   }
 
-  const { name, slug, description, technicalDetails, price, sku, stock, categoryId, featured, status, images } =
+  const { name, slug, description, technicalDetails, price, sku, stock, categoryId, featured, status, images, showPrice, productType, relatedProductIds } =
     result.data
 
   const existing = await db.product.findFirst({ where: { slug, NOT: { id } } })
@@ -139,6 +149,9 @@ export async function updateProduct(id: string, formData: FormData): Promise<Pro
       featured,
       status,
       images,
+      showPrice,
+      productType,
+      relatedProductIds,
     },
   })
 

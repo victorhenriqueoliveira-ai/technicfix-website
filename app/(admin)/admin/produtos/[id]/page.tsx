@@ -9,9 +9,10 @@ interface EditarProdutoPageProps {
 
 export default async function EditarProdutoPage({ params }: EditarProdutoPageProps) {
   const { id } = await params
-  const [product, categories] = await Promise.all([
+  const [product, categories, allProducts] = await Promise.all([
     db.product.findUnique({ where: { id } }),
     db.category.findMany({ orderBy: { name: 'asc' } }),
+    db.product.findMany({ where: { status: 'ativo' }, select: { id: true, name: true }, orderBy: { name: 'asc' } }),
   ])
 
   if (!product) {
@@ -26,6 +27,7 @@ export default async function EditarProdutoPage({ params }: EditarProdutoPagePro
       <ProductForm
         categories={categories}
         action={boundAction}
+        allProducts={allProducts}
         initialData={{
           id: product.id,
           name: product.name,
@@ -39,6 +41,9 @@ export default async function EditarProdutoPage({ params }: EditarProdutoPagePro
           featured: product.featured,
           status: product.status,
           images: product.images,
+          showPrice: product.showPrice,
+          productType: product.productType,
+          relatedProductIds: product.relatedProductIds,
         }}
       />
     </div>

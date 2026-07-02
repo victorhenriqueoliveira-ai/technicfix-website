@@ -250,6 +250,138 @@ describe('deleteProduct', () => {
   })
 })
 
+// ─── createProduct — novos campos (task_04) ───────────────────────────────────
+
+describe('createProduct — campos showPrice, productType, relatedProductIds', () => {
+  it('cria produto com showPrice=false quando campo está ausente no FormData', async () => {
+    mockProductFindUnique.mockResolvedValue(null)
+    mockProductCreate.mockResolvedValue({ id: 'prod-10' })
+
+    const fd = makeFormData({ ...baseProduct })
+    // showPrice não presente = desmarcado → false
+    const result = await createProduct(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ showPrice: false }),
+      })
+    )
+  })
+
+  it('cria produto com showPrice=true quando campo é "on"', async () => {
+    mockProductFindUnique.mockResolvedValue(null)
+    mockProductCreate.mockResolvedValue({ id: 'prod-11' })
+
+    const fd = makeFormData({ ...baseProduct, showPrice: 'on' })
+    const result = await createProduct(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ showPrice: true }),
+      })
+    )
+  })
+
+  it('cria produto com productType=varejo', async () => {
+    mockProductFindUnique.mockResolvedValue(null)
+    mockProductCreate.mockResolvedValue({ id: 'prod-12' })
+
+    const fd = makeFormData({ ...baseProduct, productType: 'varejo' })
+    const result = await createProduct(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ productType: 'varejo' }),
+      })
+    )
+  })
+
+  it('cria produto com productType padrão ambos quando campo ausente', async () => {
+    mockProductFindUnique.mockResolvedValue(null)
+    mockProductCreate.mockResolvedValue({ id: 'prod-13' })
+
+    const fd = makeFormData({ ...baseProduct })
+    const result = await createProduct(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ productType: 'ambos' }),
+      })
+    )
+  })
+
+  it('cria produto com relatedProductIds contendo dois IDs', async () => {
+    mockProductFindUnique.mockResolvedValue(null)
+    mockProductCreate.mockResolvedValue({ id: 'prod-14' })
+
+    const ids = ['rel-1', 'rel-2']
+    const fd = makeFormData({ ...baseProduct, relatedProductIds: JSON.stringify(ids) })
+    const result = await createProduct(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ relatedProductIds: ids }),
+      })
+    )
+  })
+
+  it('cria produto com relatedProductIds vazio quando campo ausente', async () => {
+    mockProductFindUnique.mockResolvedValue(null)
+    mockProductCreate.mockResolvedValue({ id: 'prod-15' })
+
+    const fd = makeFormData({ ...baseProduct })
+    const result = await createProduct(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ relatedProductIds: [] }),
+      })
+    )
+  })
+})
+
+// ─── updateProduct — novos campos (task_04) ───────────────────────────────────
+
+describe('updateProduct — campos showPrice, productType, relatedProductIds', () => {
+  it('atualiza produto adicionando relatedProductIds', async () => {
+    mockProductFindFirst.mockResolvedValue(null)
+    mockProductUpdate.mockResolvedValue({ id: 'prod-1' })
+
+    const ids = ['rel-a', 'rel-b']
+    const fd = makeFormData({ ...baseProduct, relatedProductIds: JSON.stringify(ids) })
+    const result = await updateProduct('prod-1', fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ relatedProductIds: ids }),
+      })
+    )
+  })
+
+  it('atualiza produto com showPrice=false e productType=varejo', async () => {
+    mockProductFindFirst.mockResolvedValue(null)
+    mockProductUpdate.mockResolvedValue({ id: 'prod-1' })
+
+    const fd = makeFormData({ ...baseProduct, productType: 'varejo' })
+    // showPrice ausente = false
+    const result = await updateProduct('prod-1', fd)
+
+    expect(result.success).toBe(true)
+    expect(mockProductUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ showPrice: false, productType: 'varejo' }),
+      })
+    )
+  })
+})
+
 // ─── getPresignedUploadUrl ────────────────────────────────────────────────────
 
 describe('getPresignedUploadUrl', () => {
