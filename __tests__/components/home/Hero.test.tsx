@@ -26,7 +26,6 @@ jest.mock('next/link', () => {
   return MockLink
 })
 
-// Mock useEffect para evitar timer de autoplay nos testes
 jest.useFakeTimers()
 
 const mockBanner: BannerData = {
@@ -45,17 +44,17 @@ describe('Hero', () => {
     jest.clearAllTimers()
   })
 
-  it('renderiza o banner de fallback quando a lista de banners está vazia', () => {
+  it('renderiza o badge da marca quando a lista de banners está vazia', () => {
     render(<Hero banners={[]} />)
     expect(
-      screen.getByText('Technicfix — Parafusos e Materiais de Obra')
+      screen.getByText('TechnicFix — Parafusos e Fixadores')
     ).toBeInTheDocument()
   })
 
-  it('renderiza o texto do fallback com subtítulo', () => {
+  it('renderiza o subtítulo de fallback', () => {
     render(<Hero banners={[]} />)
     expect(
-      screen.getByText('Qualidade e durabilidade para seus projetos')
+      screen.getByText('Parafusos, fixadores e muito mais para sua obra — qualidade garantida.')
     ).toBeInTheDocument()
   })
 
@@ -100,5 +99,18 @@ describe('Hero', () => {
     ]
     render(<Hero banners={banners} />)
     expect(screen.getByLabelText('Indicadores de banner')).toBeInTheDocument()
+  })
+
+  it('a cena animada tem aria-hidden para não ser lida por leitores de tela', () => {
+    render(<Hero banners={[]} />)
+    const scene = screen.getByTestId('exploding-scene')
+    expect(scene).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('renderiza o CTA de WhatsApp com href correto', () => {
+    render(<Hero banners={[]} />)
+    const waBtn = screen.getByTestId('hero-whatsapp')
+    expect(waBtn).toBeInTheDocument()
+    expect(waBtn).toHaveTextContent('Falar pelo WhatsApp')
   })
 })

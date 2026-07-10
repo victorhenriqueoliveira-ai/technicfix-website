@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { isValidUrl } from '@/lib/utils/image'
+import { ExplodingScene } from './HeroDecor'
 
 export interface BannerData {
   id: string
@@ -57,7 +58,6 @@ export function Hero({ banners }: HeroProps) {
       data-testid="hero-section"
     >
       <div className="relative min-h-[480px] md:min-h-[580px] flex items-center justify-center">
-        {/* Background: foto com overlay ou gradiente navy */}
         {hasImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -70,15 +70,11 @@ export function Hero({ banners }: HeroProps) {
           <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-brand-navy to-brand-navy-dark" />
         )}
 
-        {/* Overlay escuro para contraste */}
         <div className="absolute inset-0 bg-black/60" />
 
-        {/* Elementos decorativos industriais */}
-        <IndustrialDecor />
+        <ExplodingScene />
 
-        {/* Conteúdo principal */}
         <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
-          {/* Badge da marca */}
           <div className="inline-flex items-center gap-2 rounded-full border border-brand-amber/40 bg-brand-amber/10 px-4 py-1.5 mb-6">
             <span className="h-2 w-2 rounded-full bg-brand-amber animate-pulse" />
             <span className="text-xs font-bold uppercase tracking-widest text-brand-amber">
@@ -109,12 +105,12 @@ export function Hero({ banners }: HeroProps) {
             </p>
           )}
 
-          {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
+              data-testid="hero-whatsapp"
               className="inline-flex items-center gap-2 rounded-full bg-brand-amber px-8 py-4 text-base font-bold text-brand-navy transition-all hover:bg-brand-amber-dark hover:scale-105 shadow-lg shadow-brand-amber/30"
             >
               <WhatsAppIcon className="h-5 w-5" />
@@ -133,6 +129,7 @@ export function Hero({ banners }: HeroProps) {
               <Link
                 href="/produtos"
                 className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 px-8 py-4 text-base font-semibold text-white transition-all hover:border-white hover:bg-white/10"
+                data-testid="hero-cta"
               >
                 Ver Produtos
               </Link>
@@ -140,11 +137,9 @@ export function Hero({ banners }: HeroProps) {
           </div>
         </div>
 
-        {/* Faixa amber na base */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-amber" />
       </div>
 
-      {/* Indicadores de slide */}
       {items.length > 1 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2" aria-label="Indicadores de banner">
           {items.map((_, idx) => (
@@ -160,31 +155,6 @@ export function Hero({ banners }: HeroProps) {
         </div>
       )}
     </section>
-  )
-}
-
-function IndustrialDecor() {
-  return (
-    <>
-      {/* Engrenagem grande — canto superior direito */}
-      <svg
-        className="absolute -top-8 -right-8 h-64 w-64 text-brand-amber/10 rotate-12"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.68.07-1.08s-.03-.73-.07-1.08l2.3-1.8c.21-.16.27-.46.13-.7l-2.18-3.77c-.13-.24-.43-.32-.67-.24l-2.71 1.09c-.57-.44-1.17-.8-1.84-1.08L14.1 1.64c-.04-.26-.27-.46-.54-.46h-4.36c-.27 0-.5.2-.54.46L8.3 4.42C7.63 4.7 7.02 5.07 6.46 5.5L3.75 4.41c-.24-.08-.54 0-.67.24L.9 8.42c-.14.24-.08.54.13.7l2.3 1.8C3.29 11.27 3.25 11.61 3.25 12s.04.73.08 1.08l-2.3 1.8c-.21.16-.27.46-.13.7l2.18 3.77c.13.24.43.32.67.24l2.71-1.09c.57.44 1.17.8 1.84 1.08l.36 2.78c.05.26.27.46.54.46h4.36c.27 0 .5-.2.54-.46l.36-2.78c.67-.28 1.28-.64 1.84-1.08l2.71 1.09c.24.08.54 0 .67-.24l2.18-3.77c.13-.24.08-.54-.13-.7l-2.3-1.8z" />
-      </svg>
-      {/* Engrenagem menor — canto inferior esquerdo */}
-      <svg
-        className="absolute -bottom-4 -left-4 h-40 w-40 text-white/5 -rotate-6"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.68.07-1.08s-.03-.73-.07-1.08l2.3-1.8c.21-.16.27-.46.13-.7l-2.18-3.77c-.13-.24-.43-.32-.67-.24l-2.71 1.09c-.57-.44-1.17-.8-1.84-1.08L14.1 1.64c-.04-.26-.27-.46-.54-.46h-4.36c-.27 0-.5.2-.54.46L8.3 4.42C7.63 4.7 7.02 5.07 6.46 5.5L3.75 4.41c-.24-.08-.54 0-.67.24L.9 8.42c-.14.24-.08.54.13.7l2.3 1.8C3.29 11.27 3.25 11.61 3.25 12s.04.73.08 1.08l-2.3 1.8c-.21.16-.27.46-.13.7l2.18 3.77c.13.24.43.32.67.24l2.71-1.09c.57.44 1.17.8 1.84 1.08l.36 2.78c.05.26.27.46.54.46h4.36c.27 0 .5-.2.54-.46l.36-2.78c.67-.28 1.28-.64 1.84-1.08l2.71 1.09c.24.08.54 0 .67-.24l2.18-3.77c.13-.24.08-.54-.13-.7l-2.3-1.8z" />
-      </svg>
-    </>
   )
 }
 

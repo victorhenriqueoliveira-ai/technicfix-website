@@ -144,3 +144,17 @@
     @apply font-sans;
   }
 }
+
+/* Hero — Explosão 3D de Fixadores */
+@keyframes explode-piece {
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 0.85; }
+  33%  { transform: translate(var(--tx, 80px), var(--ty, 0px)) rotate(var(--rot, 120deg)) scale(0.75); opacity: 0.5; }
+  67%  { transform: translate(var(--tx, 80px), var(--ty, 0px)) rotate(var(--rot, 120deg)) scale(0.75); opacity: 0.5; }
+  100% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-piece {
+    animation: none !important;
+  }
+}
