@@ -48,6 +48,7 @@ export async function RelatedProducts({
     images: p.images,
     category: { name: p.category.name, slug: p.category.slug },
     featured: p.featured,
+    showPrice: p.showPrice,
   }))
 
   return (

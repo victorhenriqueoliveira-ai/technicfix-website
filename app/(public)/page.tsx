@@ -45,6 +45,7 @@ type ProductRow = {
   price: { toNumber: () => number } | null
   images: string[]
   featured: boolean
+  showPrice: boolean
   category: { name: string; slug: string }
 }
 
@@ -66,6 +67,7 @@ async function getFeaturedProducts() {
     images: p.images,
     category: p.category,
     featured: p.featured,
+    showPrice: p.showPrice,
   }))
 
   return products

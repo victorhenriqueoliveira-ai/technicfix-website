@@ -61,6 +61,7 @@ const mockProduct: ProductSummary = {
   images: ['https://example.com/parafuso.jpg'],
   category: { name: 'Parafusos', slug: 'parafusos' },
   featured: false,
+  showPrice: true,
 }
 
 describe('ProductCard', () => {

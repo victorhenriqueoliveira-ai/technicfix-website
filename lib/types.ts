@@ -2,6 +2,21 @@ export type LeadType = 'varejo' | 'atacado' | 'geral'
 export type LeadStatus = 'novo' | 'em_atendimento' | 'convertido' | 'perdido'
 export type ProductStatus = 'ativo' | 'inativo'
 
+export interface CategorySummary {
+  id: string
+  name: string
+  slug: string
+  imageUrl: string | null
+  children: CategorySummary[]
+}
+
+export interface CategoryWithProducts {
+  id: string
+  name: string
+  slug: string
+  products: ProductSummary[]
+}
+
 export interface ProductSummary {
   id: string
   name: string
@@ -10,6 +25,7 @@ export interface ProductSummary {
   images: string[]
   category: { name: string; slug: string }
   featured: boolean
+  showPrice: boolean
 }
 
 export interface LeadPayload {

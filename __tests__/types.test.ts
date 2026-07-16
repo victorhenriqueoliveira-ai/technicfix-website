@@ -3,6 +3,8 @@ import type {
   LeadStatus,
   ProductStatus,
   ProductSummary,
+  CategorySummary,
+  CategoryWithProducts,
   LeadPayload,
   SiteConfig,
 } from '@/lib/types'
@@ -32,10 +34,12 @@ describe('lib/types.ts exports', () => {
       images: ['image.jpg'],
       category: { name: 'Category', slug: 'category' },
       featured: false,
+      showPrice: true,
     }
     expect(product.id).toBe('1')
     expect(product.price).toBe(99.99)
     expect(product.category.slug).toBe('category')
+    expect(product.showPrice).toBe(true)
   })
 
   it('ProductSummary price can be null', () => {
@@ -47,8 +51,81 @@ describe('lib/types.ts exports', () => {
       images: [],
       category: { name: 'Cat', slug: 'cat' },
       featured: true,
+      showPrice: true,
     }
     expect(product.price).toBeNull()
+  })
+
+  it('ProductSummary com showPrice: true mantém todos os campos anteriores', () => {
+    const product: ProductSummary = {
+      id: '3',
+      name: 'Produto Com Preço',
+      slug: 'produto-com-preco',
+      price: 49.99,
+      images: ['img.jpg'],
+      category: { name: 'Fixadores', slug: 'fixadores' },
+      featured: false,
+      showPrice: true,
+    }
+    expect(product.showPrice).toBe(true)
+    expect(product.price).toBe(49.99)
+    expect(product.images).toHaveLength(1)
+  })
+
+  it('ProductSummary com showPrice: false é válido como tipo', () => {
+    const product: ProductSummary = {
+      id: '4',
+      name: 'Produto Sem Preço Visível',
+      slug: 'produto-sem-preco-visivel',
+      price: 30.0,
+      images: [],
+      category: { name: 'Parafusos', slug: 'parafusos' },
+      featured: false,
+      showPrice: false,
+    }
+    expect(product.showPrice).toBe(false)
+  })
+
+  it('CategorySummary com children: [] serializa corretamente', () => {
+    const cat: CategorySummary = {
+      id: 'cat-1',
+      name: 'Parafusar',
+      slug: 'parafusar',
+      imageUrl: null,
+      children: [],
+    }
+    expect(cat.children).toHaveLength(0)
+    expect(JSON.parse(JSON.stringify(cat)).children).toEqual([])
+  })
+
+  it('CategorySummary com children populados preserva campos dos filhos', () => {
+    const filho: CategorySummary = {
+      id: 'cat-filho-1',
+      name: 'Parafuso Allen',
+      slug: 'parafuso-allen',
+      imageUrl: 'https://example.com/allen.jpg',
+      children: [],
+    }
+    const pai: CategorySummary = {
+      id: 'cat-pai-1',
+      name: 'Parafusar',
+      slug: 'parafusar',
+      imageUrl: null,
+      children: [filho],
+    }
+    expect(pai.children).toHaveLength(1)
+    expect(pai.children[0].name).toBe('Parafuso Allen')
+    expect(pai.children[0].imageUrl).toBe('https://example.com/allen.jpg')
+  })
+
+  it('CategoryWithProducts com products: [] é aceito sem erro de tipo', () => {
+    const catWithProds: CategoryWithProducts = {
+      id: 'cat-2',
+      name: 'Fixadores',
+      slug: 'fixadores',
+      products: [],
+    }
+    expect(catWithProds.products).toHaveLength(0)
   })
 
   it('LeadPayload has required and optional fields', () => {

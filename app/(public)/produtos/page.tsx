@@ -21,6 +21,7 @@ interface ProductWithCategory {
   price: number | null | { toNumber?: () => number }
   images: string[]
   featured: boolean
+  showPrice: boolean
   category: { name: string; slug: string }
 }
 
@@ -73,6 +74,7 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
     images: p.images,
     category: { name: p.category.name, slug: p.category.slug },
     featured: p.featured,
+    showPrice: p.showPrice,
   }))
 
   return (

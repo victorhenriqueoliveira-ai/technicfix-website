@@ -57,6 +57,7 @@ const mockProducts: ProductSummary[] = [
     images: ['https://example.com/parafuso.jpg'],
     category: { name: 'Parafusos', slug: 'parafusos' },
     featured: true,
+    showPrice: true,
   },
   {
     id: '2',
@@ -66,6 +67,7 @@ const mockProducts: ProductSummary[] = [
     images: [],
     category: { name: 'Porcas', slug: 'porcas' },
     featured: true,
+    showPrice: false,
   },
 ]
 
