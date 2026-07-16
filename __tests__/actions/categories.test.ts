@@ -54,7 +54,7 @@ describe('createCategory', () => {
 
     expect(result).toEqual({ success: true, id: 'cat-1' })
     expect(mockCategoryCreate).toHaveBeenCalledWith({
-      data: { name: 'Parafusos', slug: 'parafusos', imageUrl: null },
+      data: { name: 'Parafusos', slug: 'parafusos', imageUrl: null, parentId: null },
     })
     expect(mockRevalidatePath).toHaveBeenCalledWith('/admin/categorias')
     expect(mockRevalidatePath).toHaveBeenCalledWith('/produtos')
@@ -100,6 +100,47 @@ describe('createCategory', () => {
     expect(result.success).toBe(false)
     expect(mockCategoryCreate).not.toHaveBeenCalled()
   })
+
+  it('cria categoria com parentId válido (cuid)', async () => {
+    mockCategoryFindUnique.mockResolvedValue(null)
+    mockCategoryCreate.mockResolvedValue({ id: 'cat-filho', name: 'Parafuso Allen', slug: 'parafuso-allen' })
+
+    const validCuid = 'clxxxxxxxxxxxxxxxxxxxxxxx'
+    const fd = makeFormData({ name: 'Parafuso Allen', slug: 'parafuso-allen', parentId: validCuid })
+    const result = await createCategory(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockCategoryCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({ parentId: validCuid }),
+    })
+  })
+
+  it('cria categoria como raiz quando parentId não fornecido (parentId: null)', async () => {
+    mockCategoryFindUnique.mockResolvedValue(null)
+    mockCategoryCreate.mockResolvedValue({ id: 'cat-raiz', name: 'Parafusar', slug: 'parafusar' })
+
+    const fd = makeFormData({ name: 'Parafusar', slug: 'parafusar' })
+    const result = await createCategory(fd)
+
+    expect(result.success).toBe(true)
+    expect(mockCategoryCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({ parentId: null }),
+    })
+  })
+
+  it('rejeita parentId com string vazia (não é cuid válido) — trata como null', async () => {
+    mockCategoryFindUnique.mockResolvedValue(null)
+    mockCategoryCreate.mockResolvedValue({ id: 'cat-raiz', name: 'Parafusar', slug: 'parafusar' })
+
+    const fd = makeFormData({ name: 'Parafusar', slug: 'parafusar', parentId: '' })
+    const result = await createCategory(fd)
+
+    // parentId vazio é tratado como null/undefined antes da validação Zod
+    expect(result.success).toBe(true)
+    expect(mockCategoryCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({ parentId: null }),
+    })
+  })
 })
 
 // ─── updateCategory ────────────────────────────────────────────────────────
@@ -115,7 +156,7 @@ describe('updateCategory', () => {
     expect(result).toEqual({ success: true, id: 'cat-1' })
     expect(mockCategoryUpdate).toHaveBeenCalledWith({
       where: { id: 'cat-1' },
-      data: { name: 'Novo Nome', slug: 'novo-nome', imageUrl: null },
+      data: { name: 'Novo Nome', slug: 'novo-nome', imageUrl: null, parentId: null },
     })
     expect(mockRevalidatePath).toHaveBeenCalledWith('/admin/categorias')
     expect(mockRevalidatePath).toHaveBeenCalledWith('/produtos')
@@ -138,16 +179,32 @@ describe('updateCategory', () => {
     expect(result.success).toBe(false)
     expect(mockCategoryUpdate).not.toHaveBeenCalled()
   })
+
+  it('atualiza categoria com novo parentId', async () => {
+    mockCategoryFindFirst.mockResolvedValue(null)
+    mockCategoryUpdate.mockResolvedValue({ id: 'cat-filho', name: 'Parafuso Allen', slug: 'parafuso-allen' })
+
+    const validCuid = 'clxxxxxxxxxxxxxxxxxxxxxxx'
+    const fd = makeFormData({ name: 'Parafuso Allen', slug: 'parafuso-allen', parentId: validCuid })
+    const result = await updateCategory('cat-filho', fd)
+
+    expect(result.success).toBe(true)
+    expect(mockCategoryUpdate).toHaveBeenCalledWith({
+      where: { id: 'cat-filho' },
+      data: expect.objectContaining({ parentId: validCuid }),
+    })
+  })
 })
 
 // ─── deleteCategory ────────────────────────────────────────────────────────
 
 describe('deleteCategory', () => {
-  it('remove categoria sem produtos associados', async () => {
+  it('remove categoria sem produtos associados e sem filhos', async () => {
     mockCategoryFindUnique.mockResolvedValue({
       id: 'cat-1',
       name: 'Parafusos',
       _count: { products: 0 },
+      children: [],
     })
     mockCategoryDelete.mockResolvedValue({ id: 'cat-1' })
 
@@ -164,6 +221,7 @@ describe('deleteCategory', () => {
       id: 'cat-1',
       name: 'Parafusos',
       _count: { products: 5 },
+      children: [],
     })
 
     const result = await deleteCategory('cat-1')
@@ -180,6 +238,36 @@ describe('deleteCategory', () => {
 
     expect(result.success).toBe(false)
     expect((result as { success: false; error: string }).error).toMatch(/não encontrada/)
+    expect(mockCategoryDelete).not.toHaveBeenCalled()
+  })
+
+  it('retorna erro quando categoria possui subcategorias (filhos)', async () => {
+    mockCategoryFindUnique.mockResolvedValue({
+      id: 'cat-pai',
+      name: 'Parafusar',
+      _count: { products: 0 },
+      children: [{ id: 'cat-filho', name: 'Parafuso Allen' }],
+    })
+
+    const result = await deleteCategory('cat-pai')
+
+    expect(result.success).toBe(false)
+    expect((result as { success: false; error: string }).error).toMatch(/subcategorias/)
+    expect(mockCategoryDelete).not.toHaveBeenCalled()
+  })
+
+  it('verifica filhos antes de produtos — retorna erro de subcategoria primeiro', async () => {
+    mockCategoryFindUnique.mockResolvedValue({
+      id: 'cat-pai',
+      name: 'Parafusar',
+      _count: { products: 3 },
+      children: [{ id: 'cat-filho', name: 'Parafuso Allen' }],
+    })
+
+    const result = await deleteCategory('cat-pai')
+
+    expect(result.success).toBe(false)
+    expect((result as { success: false; error: string }).error).toMatch(/subcategorias/)
     expect(mockCategoryDelete).not.toHaveBeenCalled()
   })
 })
