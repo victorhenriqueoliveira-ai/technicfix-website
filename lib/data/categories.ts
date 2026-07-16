@@ -80,6 +80,7 @@ export async function getCategoriesWithProducts(
             : Number(p.price))
         : null,
       images: p.images as string[],
+      badge: null,
       featured: p.featured,
       showPrice: p.showPrice,
       category: {
