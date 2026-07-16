@@ -56,6 +56,7 @@ export async function getCategoriesWithProducts(
           price: true,
           images: true,
           featured: true,
+          badge: true,
           showPrice: true,
           category: {
             select: { name: true, slug: true },
@@ -80,7 +81,7 @@ export async function getCategoriesWithProducts(
             : Number(p.price))
         : null,
       images: p.images as string[],
-      badge: null,
+      badge: p.badge ?? null,
       featured: p.featured,
       showPrice: p.showPrice,
       category: {
