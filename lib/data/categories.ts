@@ -49,15 +49,7 @@ export async function getCategoriesWithProducts(
         where: { status: 'ativo' },
         orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
         take: limit,
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          price: true,
-          images: true,
-          featured: true,
-          badge: true,
-          showPrice: true,
+        include: {
           category: {
             select: { name: true, slug: true },
           },
@@ -81,7 +73,7 @@ export async function getCategoriesWithProducts(
             : Number(p.price))
         : null,
       images: p.images as string[],
-      badge: p.badge ?? null,
+      badge: null,
       featured: p.featured,
       showPrice: p.showPrice,
       category: {
