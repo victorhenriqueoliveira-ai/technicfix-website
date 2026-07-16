@@ -59,6 +59,7 @@ const mockProduct: ProductSummary = {
   slug: 'parafuso-m8-inox',
   price: 12.5,
   images: ['https://example.com/parafuso.jpg'],
+  badge: null,
   category: { name: 'Parafusos', slug: 'parafusos' },
   featured: false,
   showPrice: true,

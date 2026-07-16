@@ -46,6 +46,7 @@ export async function RelatedProducts({
     slug: p.slug,
     price: p.price !== null ? Number(p.price) : null,
     images: p.images,
+    badge: (p as { badge?: string | null }).badge ?? null,
     category: { name: p.category.name, slug: p.category.slug },
     featured: p.featured,
     showPrice: p.showPrice,

@@ -65,6 +65,7 @@ async function getFeaturedProducts() {
     slug: p.slug,
     price: p.price !== null ? Number(p.price) : null,
     images: p.images,
+    badge: (p as { badge?: string | null }).badge ?? null,
     category: p.category,
     featured: p.featured,
     showPrice: p.showPrice,

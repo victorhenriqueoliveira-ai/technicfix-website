@@ -23,6 +23,7 @@ export interface ProductSummary {
   slug: string
   price: number | null
   images: string[]
+  badge: string | null
   category: { name: string; slug: string }
   featured: boolean
   showPrice: boolean
