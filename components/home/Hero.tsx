@@ -21,7 +21,7 @@ interface HeroProps {
 
 const FALLBACK_BANNER: BannerData = {
   id: 'fallback',
-  imageUrl: '',
+  imageUrl: '/banner.png',
   title: 'Fixação que não Falha',
   subtitle: null,
   ctaText: null,
@@ -71,24 +71,23 @@ export function Hero({ banners }: HeroProps) {
     <section
       aria-label="Banner principal"
       className="relative w-full overflow-hidden"
-      style={{ height: '420px' }}
+      style={{ height: '650px' }}
       data-testid="hero-section"
       onMouseEnter={stopAutoRotation}
       onMouseLeave={startAutoRotation}
     >
       {/* Imagem ou fallback amber */}
       {isFallback ? (
-        <div
-          className="w-full h-full bg-brand-amber flex items-center justify-center"
-          data-testid="hero-fallback"
-        >
-          <span
-            className="text-3xl md:text-5xl font-extrabold text-brand-navy text-center px-4"
-            data-testid="hero-fallback-text"
-          >
-            Fixação que não Falha
-          </span>
-        </div>
+        <picture className="w-full h-full" data-testid="hero-fallback">
+          <source media="(max-width: 767px)" srcSet="/banner_mobile.png" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/banner.png"
+            alt={banner.title}
+            className="w-full h-full object-cover"
+            data-testid="hero-image"
+          />
+        </picture>
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
         <img

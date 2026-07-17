@@ -8,7 +8,9 @@ import { CategoryProductSection } from '@/components/home/CategoryProductSection
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://technicfix.com.br'
 
 export const metadata: Metadata = {
-  title: 'TechnicFix — Parafusos e Fixadores | Fixação que não Falha',
+  title: {
+    absolute: 'TechnicFix — Parafusos e Fixadores | Fixação que não Falha',
+  },
   description:
     'Loja especializada em parafusos, fixadores e materiais de construção. Qualidade e atendimento especializado para sua obra. Atacado e varejo.',
   openGraph: {
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
     description:
       'Loja especializada em parafusos, fixadores e materiais de construção. Qualidade e atendimento especializado para sua obra.',
     url: siteUrl,
-    images: [{ url: `${siteUrl}/og-image.jpg` }],
+    images: [{ url: `${siteUrl}/og-image.jpg`, width: 1200, height: 630 }],
   },
 }
 

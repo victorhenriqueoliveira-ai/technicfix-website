@@ -108,23 +108,29 @@ function CategoryIcon({ category }: { category: CategorySummary }) {
 
 interface CategoryAccordionProps {
   categories: CategorySummary[]
+  variant?: 'dark' | 'light'
 }
 
 /**
  * Acordeão de categorias para uso no Sheet mobile do Header.
  * Exportado separadamente para que o Header possa injetar no Sheet.
  */
-export function CategoryAccordion({ categories }: CategoryAccordionProps) {
+export function CategoryAccordion({ categories, variant = 'dark' }: CategoryAccordionProps) {
+  const text = variant === 'light' ? 'text-gray-700' : 'text-white/80'
+  const textHover = variant === 'light' ? 'hover:text-brand-amber' : 'hover:text-brand-amber'
+  const chevron = variant === 'light' ? 'text-gray-400' : 'text-white/60'
+  const childText = variant === 'light' ? 'text-gray-500' : 'text-white/70'
+  const divider = variant === 'light' ? 'border-b border-gray-100' : ''
+
   return (
-    <div className="flex flex-col gap-1" data-testid="category-accordion">
+    <div className="flex flex-col" data-testid="category-accordion">
       {categories.map((cat) => (
-        <details key={cat.id} className="group">
+        <details key={cat.id} className={`group ${divider}`}>
           <summary
             className={[
               'flex cursor-pointer list-none items-center justify-between',
-              'px-2 py-2 text-base font-medium text-white/80',
-              'hover:text-brand-amber',
-              cat.children.length === 0 ? 'pointer-events-none' : '',
+              `px-2 py-2.5 text-sm font-medium ${text} ${textHover}`,
+              cat.children.length === 0 ? '' : '',
             ].join(' ')}
           >
             {cat.children.length > 0 ? (
@@ -132,26 +138,26 @@ export function CategoryAccordion({ categories }: CategoryAccordionProps) {
             ) : (
               <Link
                 href={`/produtos?categoria=${cat.slug}`}
-                className="flex-1 hover:text-brand-amber"
+                className={`flex-1 ${textHover}`}
                 onClick={(e) => e.stopPropagation()}
               >
                 {cat.name}
               </Link>
             )}
             {cat.children.length > 0 && (
-              <span className="ml-2 text-white/60 group-open:rotate-180 transition-transform">
+              <span className={`ml-2 ${chevron} group-open:rotate-180 transition-transform`}>
                 ▾
               </span>
             )}
           </summary>
 
           {cat.children.length > 0 && (
-            <div className="ml-4 flex flex-col gap-1 pb-1">
+            <div className="ml-3 flex flex-col pb-1">
               {cat.children.map((child) => (
                 <Link
                   key={child.id}
                   href={`/produtos?categoria=${child.slug}`}
-                  className="block py-1 text-sm text-white/70 hover:text-brand-amber"
+                  className={`block px-2 py-1.5 text-sm ${childText} hover:text-brand-amber`}
                 >
                   {child.name}
                 </Link>

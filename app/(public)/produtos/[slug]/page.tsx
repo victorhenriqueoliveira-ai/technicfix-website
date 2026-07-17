@@ -20,14 +20,15 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   })
 
   if (!product) {
-    return { title: 'Produto não encontrado | TechnicFix' }
+    return { title: 'Produto não encontrado' }
   }
 
   return {
-    title: `${product.name} | TechnicFix`,
+    title: product.name,
     description: product.description?.slice(0, 155) ?? `${product.name} — TechnicFix`,
     openGraph: {
-      title: product.name,
+      title: `${product.name} | TechnicFix`,
+      description: product.description?.slice(0, 155) ?? `${product.name} — TechnicFix`,
       images: product.images[0] ? [{ url: product.images[0] }] : [],
     },
   }

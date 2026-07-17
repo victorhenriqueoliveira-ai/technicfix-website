@@ -8,9 +8,13 @@ import { Suspense } from 'react'
 import type { ProductSummary } from '@/lib/types'
 
 export const metadata: Metadata = {
-  title: 'Produtos | TechnicFix — Parafusos e Fixadores',
+  title: 'Produtos',
   description:
     'Catálogo completo de parafusos, fixadores e materiais de construção. Encontre o produto ideal para sua obra.',
+  openGraph: {
+    title: 'Produtos | TechnicFix',
+    description: 'Catálogo completo de parafusos, fixadores e materiais de construção.',
+  },
 }
 
 /** Tipo local para produto retornado pelo Prisma com category incluída */

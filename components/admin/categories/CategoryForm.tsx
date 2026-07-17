@@ -11,11 +11,13 @@ interface CategoryFormProps {
     name: string
     slug: string
     imageUrl: string | null
+    parentId?: string | null
   }
+  categories?: { id: string; name: string }[]
   action: (formData: FormData) => Promise<CategoryActionResult>
 }
 
-export function CategoryForm({ initialData, action }: CategoryFormProps) {
+export function CategoryForm({ initialData, categories, action }: CategoryFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -116,6 +118,28 @@ export function CategoryForm({ initialData, action }: CategoryFormProps) {
           placeholder="https://example.com/imagem.png"
         />
       </div>
+
+      {categories && categories.length > 0 && (
+        <div>
+          <label htmlFor="parentId" className="block text-sm font-medium text-gray-700 mb-1">
+            Categoria-pai
+            <span className="ml-1 text-xs text-gray-400">(opcional)</span>
+          </label>
+          <select
+            id="parentId"
+            name="parentId"
+            defaultValue={initialData?.parentId ?? ''}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">— Nenhuma (categoria raiz) —</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="flex gap-3 pt-2">
         <button

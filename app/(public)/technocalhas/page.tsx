@@ -3,8 +3,12 @@ import { db } from '@/lib/prisma'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 
 export const metadata = {
-  title: 'Technocalhas | TechnicFix',
+  title: 'Technocalhas',
   description: 'Conheça a Technocalhas — empresa especializada em calhas e perfis metálicos.',
+  openGraph: {
+    title: 'Technocalhas | TechnicFix',
+    description: 'Empresa especializada em calhas e perfis metálicos, parceira da TechnicFix.',
+  },
 }
 
 export default async function TechnocalhasPage() {

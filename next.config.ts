@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
         hostname: 'brasilfuso.com.br',
         pathname: '/**',
       },
+      {
+        protocol: 'https' as const,
+        hostname: '**.ufs.sh',
+        pathname: '/**',
+      },
     ],
   },
 };

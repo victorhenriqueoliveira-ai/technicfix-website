@@ -5,7 +5,10 @@ import { DeleteCategoryButton } from '@/components/admin/categories/DeleteCatego
 export default async function CategoriasPage() {
   const categories = await db.category.findMany({
     orderBy: { name: 'asc' },
-    include: { _count: { select: { products: true } } },
+    include: {
+      _count: { select: { products: true, children: true } },
+      parent: { select: { name: true } },
+    },
   })
 
   return (
@@ -34,7 +37,13 @@ export default async function CategoriasPage() {
                   Slug
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  Categoria-pai
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                   Produtos
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  Subcategorias
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
                   Ações
@@ -53,7 +62,13 @@ export default async function CategoriasPage() {
                     </code>
                   </td>
                   <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                    {category.parent?.name ?? <span className="text-gray-300">—</span>}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                     {category._count.products}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                    {category._count.children}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
                     <div className="flex items-center justify-end gap-4">

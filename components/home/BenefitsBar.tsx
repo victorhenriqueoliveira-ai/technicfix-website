@@ -1,11 +1,11 @@
 import { Truck, MessageCircle, ShieldCheck, Package } from 'lucide-react'
 
 const BENEFITS = [
-  {
-    Icon: Truck,
-    title: 'Frete para Todo o Brasil',
-    description: 'Correios e transportadoras',
-  },
+  // {
+  //   Icon: Truck,
+  //   title: 'Frete para Todo o Brasil',
+  //   description: 'Correios e transportadoras',
+  // },
   {
     Icon: MessageCircle,
     title: 'Atendimento via WhatsApp',
@@ -26,7 +26,7 @@ const BENEFITS = [
 export function BenefitsBar() {
   return (
     <section className="bg-white border-b border-gray-100 py-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4 px-4">
         {BENEFITS.map((b) => (
           <div key={b.title} className="flex flex-col items-center text-center gap-2">
             <b.Icon className="w-8 h-8 text-brand-navy stroke-[1.5]" />

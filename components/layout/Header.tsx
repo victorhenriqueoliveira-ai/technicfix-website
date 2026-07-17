@@ -1,6 +1,9 @@
 import Link from 'next/link'
-import { CategoryNav } from '@/components/layout/CategoryNav'
+import Image from 'next/image'
+import { Menu } from 'lucide-react'
+import { CategoryNav, CategoryAccordion } from '@/components/layout/CategoryNav'
 import { HeaderSearchBar } from '@/components/layout/HeaderSearchBar'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { CategorySummary } from '@/lib/types'
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
@@ -16,25 +19,32 @@ export function Header({ categories = [] }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 shadow-md">
       {/* Camada 1 — TopBar: desktop only */}
-      <div className="hidden md:block bg-brand-navy-dark text-white/70 text-xs py-1.5 px-4">
-        Entrega para todo o Brasil · Atendimento via WhatsApp
+      <div className="hidden md:block bg-brand-navy-dark text-white/70 text-xs py-1.5 px-4 text-center">
+        Atendimento via WhatsApp · Variedade de Fixadores
       </div>
 
       {/* Camada 2 — MainBar: logo + busca + CTA */}
-      <div className="bg-white border-b border-gray-100 py-3 px-4">
+      <div className="bg-white border-b border-gray-100 px-4">
         <div className="max-w-7xl mx-auto flex items-center gap-4">
+
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <GearIcon className="h-7 w-7 text-brand-amber" />
-            <span className="text-xl font-extrabold tracking-tight text-brand-navy">
-              Technic<span className="text-brand-amber">Fix</span>
-            </span>
+          <Link href="/" className="shrink-0">
+            <Image
+              src="/logo_technicfix.png"
+              alt="Technicfix"
+              width={168}
+              height={112}
+              priority
+              className="object-contain"
+            />
           </Link>
 
-          {/* Busca central */}
-          <HeaderSearchBar className="flex-1 max-w-xl" />
+          {/* Busca — oculta no mobile, encolhe em telas intermediárias */}
+          <div className="hidden md:flex flex-1 min-w-0">
+            <HeaderSearchBar className="w-full" />
+          </div>
 
-          {/* WhatsApp CTA */}
+          {/* WhatsApp CTA — desktop only */}
           <a
             href={whatsappHref}
             target="_blank"
@@ -45,20 +55,54 @@ export function Header({ categories = [] }: HeaderProps) {
             <WhatsAppIcon className="h-4 w-4" />
             WhatsApp
           </a>
+
+          {/* Hamburguer — mobile only, empurrado para a direita */}
+          <div className="md:hidden ml-auto">
+            <Sheet>
+              <SheetTrigger
+                aria-label="Abrir menu"
+                className="flex items-center justify-center h-9 w-9 rounded-md text-gray-600 hover:bg-gray-100"
+              >
+                <Menu className="h-5 w-5" />
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-white w-72 p-0 flex flex-col gap-0">
+                {/* Cabeçalho do drawer */}
+                <div className="flex items-center px-4 py-3 border-b border-gray-100">
+                  <span className="text-sm font-semibold text-gray-900">Menu</span>
+                </div>
+                {/* Busca */}
+                <div className="px-4 py-3 border-b border-gray-100">
+                  <HeaderSearchBar className="w-full" />
+                </div>
+                {/* Categorias */}
+                {/* <nav className="flex-1 overflow-y-auto" aria-label="Categorias">
+                  <p className="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Categorias
+                  </p>
+                  <CategoryAccordion categories={categories} variant="light" />
+                </nav> */}
+                {/* WhatsApp — rodapé do drawer */}
+                <div className="p-4 border-t border-gray-100">
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full rounded-full bg-brand-amber py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-amber-dark"
+                  >
+                    <WhatsAppIcon className="h-5 w-5" />
+                    Falar no WhatsApp
+                  </a>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
         </div>
       </div>
 
-      {/* Camada 3 — CategoryNav */}
-      <CategoryNav categories={categories} />
+      {/* Camada 3 — CategoryNav (desktop)
+      <CategoryNav categories={categories} /> */}
     </header>
-  )
-}
-
-function GearIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.34.07-.68.07-1.08s-.03-.73-.07-1.08l2.3-1.8c.21-.16.27-.46.13-.7l-2.18-3.77c-.13-.24-.43-.32-.67-.24l-2.71 1.09c-.57-.44-1.17-.8-1.84-1.08L14.1 1.64c-.04-.26-.27-.46-.54-.46h-4.36c-.27 0-.5.2-.54.46L8.3 4.42C7.63 4.7 7.02 5.07 6.46 5.5L3.75 4.41c-.24-.08-.54 0-.67.24L.9 8.42c-.14.24-.08.54.13.7l2.3 1.8C3.29 11.27 3.25 11.61 3.25 12s.04.73.08 1.08l-2.3 1.8c-.21.16-.27.46-.13.7l2.18 3.77c.13.24.43.32.67.24l2.71-1.09c.57.44 1.17.8 1.84 1.08l.36 2.78c.05.26.27.46.54.46h4.36c.27 0 .5-.2.54-.46l.36-2.78c.67-.28 1.28-.64 1.84-1.08l2.71 1.09c.24.08.54 0 .67-.24l2.18-3.77c.13-.24.08-.54-.13-.7l-2.3-1.8z" />
-    </svg>
   )
 }
 

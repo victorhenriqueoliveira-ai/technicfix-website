@@ -2,7 +2,7 @@
  * Testes unitários e de integração para actions/site-config.ts
  */
 
-import { configSchema } from '@/actions/site-config'
+import { configSchema } from '@/lib/schemas/site-config'
 
 // ────────────────────────────────────────────────────────────
 // Testes unitários — schema Zod
