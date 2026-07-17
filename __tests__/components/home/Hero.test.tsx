@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { Hero } from '@/components/home/Hero'
 import type { BannerData } from '@/components/home/Hero'
@@ -26,10 +26,19 @@ jest.mock('next/link', () => {
   return MockLink
 })
 
-// Mock useEffect para evitar timer de autoplay nos testes
+// Mock lucide-react
+jest.mock('lucide-react', () => ({
+  ChevronLeft: ({ className }: { className?: string }) => (
+    <svg data-testid="icon-chevron-left" className={className} />
+  ),
+  ChevronRight: ({ className }: { className?: string }) => (
+    <svg data-testid="icon-chevron-right" className={className} />
+  ),
+}))
+
 jest.useFakeTimers()
 
-const mockBanner: BannerData = {
+const makeBanner = (overrides: Partial<BannerData> = {}): BannerData => ({
   id: '1',
   imageUrl: 'https://example.com/banner.jpg',
   title: 'Banner de Teste',
@@ -38,67 +47,147 @@ const mockBanner: BannerData = {
   ctaUrl: '/produtos',
   order: 0,
   active: true,
-}
+  ...overrides,
+})
 
 describe('Hero', () => {
   afterEach(() => {
     jest.clearAllTimers()
   })
 
-  it('renderiza o banner de fallback quando a lista de banners está vazia', () => {
-    render(<Hero banners={[]} />)
-    expect(
-      screen.getByText('Technicfix — Parafusos e Materiais de Obra')
-    ).toBeInTheDocument()
+  describe('Fallback amber', () => {
+    it('exibe fallback amber com texto "Fixação que não Falha" quando banners é vazio', () => {
+      render(<Hero banners={[]} />)
+      expect(screen.getByTestId('hero-fallback')).toBeInTheDocument()
+      expect(screen.getByTestId('hero-fallback-text')).toHaveTextContent('Fixação que não Falha')
+    })
+
+    it('exibe fallback amber quando banner tem imageUrl vazio', () => {
+      render(<Hero banners={[makeBanner({ imageUrl: '' })]} />)
+      expect(screen.getByTestId('hero-fallback')).toBeInTheDocument()
+      expect(screen.getByTestId('hero-fallback-text')).toHaveTextContent('Fixação que não Falha')
+    })
+
+    it('não crasha com imageUrl null', () => {
+      // @ts-expect-error — teste propositalmente com null
+      render(<Hero banners={[makeBanner({ imageUrl: null })]} />)
+      expect(screen.getByTestId('hero-fallback')).toBeInTheDocument()
+    })
+
+    it('fallback tem classe bg-brand-amber', () => {
+      render(<Hero banners={[]} />)
+      const fallback = screen.getByTestId('hero-fallback')
+      expect(fallback.className).toContain('bg-brand-amber')
+    })
   })
 
-  it('renderiza o texto do fallback com subtítulo', () => {
-    render(<Hero banners={[]} />)
-    expect(
-      screen.getByText('Qualidade e durabilidade para seus projetos')
-    ).toBeInTheDocument()
+  describe('Renderização com banners', () => {
+    it('renderiza a imagem do banner 0 inicialmente com 3 banners', () => {
+      const banners = [
+        makeBanner({ id: '1', imageUrl: 'https://example.com/b1.jpg' }),
+        makeBanner({ id: '2', imageUrl: 'https://example.com/b2.jpg' }),
+        makeBanner({ id: '3', imageUrl: 'https://example.com/b3.jpg' }),
+      ]
+      render(<Hero banners={banners} />)
+      const img = screen.getByTestId('hero-image')
+      expect(img).toHaveAttribute('src', 'https://example.com/b1.jpg')
+    })
+
+    it('renderiza a seção hero com aria-label correto', () => {
+      render(<Hero banners={[makeBanner()]} />)
+      expect(screen.getByRole('region', { name: 'Banner principal' })).toBeInTheDocument()
+    })
+
+    it('container tem style height 420px', () => {
+      render(<Hero banners={[makeBanner()]} />)
+      const section = screen.getByTestId('hero-section')
+      expect(section).toHaveStyle({ height: '420px' })
+    })
+
+    it('não tem elemento com overlay navy escuro sobre a imagem', () => {
+      render(<Hero banners={[makeBanner()]} />)
+      // Verifica ausência de overlay bg-black com opacity sobre a imagem
+      const overlays = document.querySelectorAll('[class*="bg-black/"]')
+      // Somente os botões de seta podem ter bg-black/30 — nenhum overlay de tela cheia
+      overlays.forEach((el) => {
+        expect(el.tagName).not.toBe('DIV')
+      })
+    })
   })
 
-  it('renderiza o CTA de fallback com link para /produtos', () => {
-    render(<Hero banners={[]} />)
-    const cta = screen.getByTestId('hero-cta')
-    expect(cta).toBeInTheDocument()
-    expect(cta).toHaveAttribute('href', '/produtos')
+  describe('Navegação por setas', () => {
+    it('não exibe setas quando há apenas 1 banner', () => {
+      render(<Hero banners={[makeBanner()]} />)
+      expect(screen.queryByTestId('hero-prev')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('hero-next')).not.toBeInTheDocument()
+    })
+
+    it('exibe setas quando há mais de 1 banner', () => {
+      const banners = [makeBanner({ id: '1' }), makeBanner({ id: '2', title: 'B2' })]
+      render(<Hero banners={banners} />)
+      expect(screen.getByTestId('hero-prev')).toBeInTheDocument()
+      expect(screen.getByTestId('hero-next')).toBeInTheDocument()
+    })
+
+    it('clicar na seta direita avança para o banner 1', () => {
+      const banners = [
+        makeBanner({ id: '1', imageUrl: 'https://example.com/b1.jpg' }),
+        makeBanner({ id: '2', imageUrl: 'https://example.com/b2.jpg' }),
+        makeBanner({ id: '3', imageUrl: 'https://example.com/b3.jpg' }),
+      ]
+      render(<Hero banners={banners} />)
+      fireEvent.click(screen.getByTestId('hero-next'))
+      expect(screen.getByTestId('hero-image')).toHaveAttribute('src', 'https://example.com/b2.jpg')
+    })
+
+    it('clicar na seta esquerda a partir do banner 0 vai para o último banner (loop)', () => {
+      const banners = [
+        makeBanner({ id: '1', imageUrl: 'https://example.com/b1.jpg' }),
+        makeBanner({ id: '2', imageUrl: 'https://example.com/b2.jpg' }),
+        makeBanner({ id: '3', imageUrl: 'https://example.com/b3.jpg' }),
+      ]
+      render(<Hero banners={banners} />)
+      fireEvent.click(screen.getByTestId('hero-prev'))
+      expect(screen.getByTestId('hero-image')).toHaveAttribute('src', 'https://example.com/b3.jpg')
+    })
   })
 
-  it('renderiza o título do primeiro banner quando a lista tem um item', () => {
-    render(<Hero banners={[mockBanner]} />)
-    expect(screen.getByTestId('hero-title')).toHaveTextContent('Banner de Teste')
+  describe('Dots de navegação', () => {
+    it('não renderiza dots quando há apenas 1 banner', () => {
+      render(<Hero banners={[makeBanner()]} />)
+      expect(screen.queryByLabelText('Indicadores de banner')).not.toBeInTheDocument()
+    })
+
+    it('renderiza dots quando há múltiplos banners', () => {
+      const banners = [makeBanner({ id: '1' }), makeBanner({ id: '2', title: 'B2' })]
+      render(<Hero banners={banners} />)
+      expect(screen.getByLabelText('Indicadores de banner')).toBeInTheDocument()
+    })
+
+    it('clicar no dot 2 vai para o banner 2', () => {
+      const banners = [
+        makeBanner({ id: '1', imageUrl: 'https://example.com/b1.jpg' }),
+        makeBanner({ id: '2', imageUrl: 'https://example.com/b2.jpg' }),
+        makeBanner({ id: '3', imageUrl: 'https://example.com/b3.jpg' }),
+      ]
+      render(<Hero banners={banners} />)
+      const dot3 = screen.getByLabelText('Ir para banner 3')
+      fireEvent.click(dot3)
+      expect(screen.getByTestId('hero-image')).toHaveAttribute('src', 'https://example.com/b3.jpg')
+    })
   })
 
-  it('renderiza o subtítulo do banner quando fornecido', () => {
-    render(<Hero banners={[mockBanner]} />)
-    expect(screen.getByTestId('hero-subtitle')).toHaveTextContent('Subtítulo do banner')
-  })
+  describe('Ícones de navegação', () => {
+    it('exibe ícone ChevronLeft na seta esquerda', () => {
+      const banners = [makeBanner({ id: '1' }), makeBanner({ id: '2', title: 'B2' })]
+      render(<Hero banners={banners} />)
+      expect(screen.getByTestId('icon-chevron-left')).toBeInTheDocument()
+    })
 
-  it('renderiza o CTA com href correto quando fornecido no banner', () => {
-    render(<Hero banners={[mockBanner]} />)
-    const cta = screen.getByTestId('hero-cta')
-    expect(cta).toHaveAttribute('href', '/produtos')
-    expect(cta).toHaveTextContent('Ver Mais')
-  })
-
-  it('renderiza a seção hero com aria-label correto', () => {
-    render(<Hero banners={[mockBanner]} />)
-    expect(screen.getByRole('region', { name: 'Banner principal' })).toBeInTheDocument()
-  })
-
-  it('não renderiza indicadores quando há apenas um banner', () => {
-    render(<Hero banners={[mockBanner]} />)
-    expect(screen.queryByLabelText('Indicadores de banner')).not.toBeInTheDocument()
-  })
-
-  it('renderiza indicadores quando há múltiplos banners', () => {
-    const banners: BannerData[] = [
-      mockBanner,
-      { ...mockBanner, id: '2', title: 'Banner 2' },
-    ]
-    render(<Hero banners={banners} />)
-    expect(screen.getByLabelText('Indicadores de banner')).toBeInTheDocument()
+    it('exibe ícone ChevronRight na seta direita', () => {
+      const banners = [makeBanner({ id: '1' }), makeBanner({ id: '2', title: 'B2' })]
+      render(<Hero banners={banners} />)
+      expect(screen.getByTestId('icon-chevron-right')).toBeInTheDocument()
+    })
   })
 })

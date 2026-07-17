@@ -12,6 +12,7 @@ const categorySchema = z.object({
     .min(2, 'Slug deve ter no mínimo 2 caracteres')
     .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens'),
   imageUrl: z.string().url('URL de imagem inválida').optional().or(z.literal('')),
+  parentId: z.string().cuid().optional().nullable(),
 })
 
 export type CategoryActionResult =
@@ -19,10 +20,12 @@ export type CategoryActionResult =
   | { success: false; error: string }
 
 export async function createCategory(formData: FormData): Promise<CategoryActionResult> {
+  const parentIdRaw = (formData.get('parentId') as string) || null
   const raw = {
     name: formData.get('name') as string,
     slug: (formData.get('slug') as string) || slugify(formData.get('name') as string),
     imageUrl: (formData.get('imageUrl') as string) || '',
+    parentId: parentIdRaw || undefined,
   }
 
   const result = categorySchema.safeParse(raw)
@@ -30,7 +33,7 @@ export async function createCategory(formData: FormData): Promise<CategoryAction
     return { success: false, error: result.error.issues[0].message }
   }
 
-  const { name, slug, imageUrl } = result.data
+  const { name, slug, imageUrl, parentId } = result.data
 
   const existing = await db.category.findUnique({ where: { slug } })
   if (existing) {
@@ -42,6 +45,7 @@ export async function createCategory(formData: FormData): Promise<CategoryAction
       name,
       slug,
       imageUrl: imageUrl || null,
+      parentId: parentId ?? null,
     },
   })
 
@@ -55,10 +59,12 @@ export async function updateCategory(
   id: string,
   formData: FormData
 ): Promise<CategoryActionResult> {
+  const parentIdRaw = (formData.get('parentId') as string) || null
   const raw = {
     name: formData.get('name') as string,
     slug: (formData.get('slug') as string) || slugify(formData.get('name') as string),
     imageUrl: (formData.get('imageUrl') as string) || '',
+    parentId: parentIdRaw || undefined,
   }
 
   const result = categorySchema.safeParse(raw)
@@ -66,7 +72,7 @@ export async function updateCategory(
     return { success: false, error: result.error.issues[0].message }
   }
 
-  const { name, slug, imageUrl } = result.data
+  const { name, slug, imageUrl, parentId } = result.data
 
   const existing = await db.category.findFirst({
     where: { slug, NOT: { id } },
@@ -81,6 +87,7 @@ export async function updateCategory(
       name,
       slug,
       imageUrl: imageUrl || null,
+      parentId: parentId ?? null,
     },
   })
 
@@ -93,11 +100,21 @@ export async function updateCategory(
 export async function deleteCategory(id: string): Promise<CategoryActionResult> {
   const category = await db.category.findUnique({
     where: { id },
-    include: { _count: { select: { products: true } } },
+    include: {
+      _count: { select: { products: true } },
+      children: true,
+    },
   })
 
   if (!category) {
     return { success: false, error: 'Categoria não encontrada.' }
+  }
+
+  if (category.children.length > 0) {
+    return {
+      success: false,
+      error: 'Categoria possui subcategorias. Remova os filhos antes de deletar.',
+    }
   }
 
   if (category._count.products > 0) {

@@ -8,9 +8,13 @@ import { Suspense } from 'react'
 import type { ProductSummary } from '@/lib/types'
 
 export const metadata: Metadata = {
-  title: 'Produtos | TechnicFix — Parafusos e Fixadores',
+  title: 'Produtos',
   description:
     'Catálogo completo de parafusos, fixadores e materiais de construção. Encontre o produto ideal para sua obra.',
+  openGraph: {
+    title: 'Produtos | TechnicFix',
+    description: 'Catálogo completo de parafusos, fixadores e materiais de construção.',
+  },
 }
 
 /** Tipo local para produto retornado pelo Prisma com category incluída */
@@ -21,6 +25,7 @@ interface ProductWithCategory {
   price: number | null | { toNumber?: () => number }
   images: string[]
   featured: boolean
+  showPrice: boolean
   category: { name: string; slug: string }
 }
 
@@ -71,8 +76,10 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
     slug: p.slug,
     price: p.price !== null ? Number(p.price) : null,
     images: p.images,
+    badge: (p as { badge?: string | null }).badge ?? null,
     category: { name: p.category.name, slug: p.category.slug },
     featured: p.featured,
+    showPrice: p.showPrice,
   }))
 
   return (

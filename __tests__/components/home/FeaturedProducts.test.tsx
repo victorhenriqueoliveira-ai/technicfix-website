@@ -55,8 +55,10 @@ const mockProducts: ProductSummary[] = [
     slug: 'parafuso-sextavado-m8',
     price: 2.5,
     images: ['https://example.com/parafuso.jpg'],
+    badge: null,
     category: { name: 'Parafusos', slug: 'parafusos' },
     featured: true,
+    showPrice: true,
   },
   {
     id: '2',
@@ -64,8 +66,10 @@ const mockProducts: ProductSummary[] = [
     slug: 'porca-hexagonal-m10',
     price: null,
     images: [],
+    badge: null,
     category: { name: 'Porcas', slug: 'porcas' },
     featured: true,
+    showPrice: false,
   },
 ]
 

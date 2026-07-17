@@ -11,13 +11,16 @@ datasource db {
 }
 
 model Category {
-  id        String    @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
-  slug      String    @unique
+  slug      String     @unique
   imageUrl  String?
+  parentId  String?
+  parent    Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryChildren")
   products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Product {
@@ -30,6 +33,7 @@ model Product {
   sku               String?       @unique
   stock             Int           @default(0)
   images            String[]
+  badge             String?
   featured          Boolean       @default(false)
   status            ProductStatus @default(ativo)
   showPrice         Boolean       @default(true)
@@ -92,6 +96,8 @@ model SiteConfig {
   contactEmail            String   @default("")
   technocalhasUrl         String   @default("")
   technocalhasDescription String   @default("")
+  heroBadge1              String?
+  heroBadge2              String?
   updatedAt               DateTime @updatedAt
 }
 

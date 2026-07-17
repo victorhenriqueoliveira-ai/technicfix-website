@@ -12,8 +12,8 @@ export async function generateMetadata({ params }: CategoriasPageProps): Promise
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ')
   return {
-    title: `${name} | Technicfix`,
-    description: `Produtos da categoria ${name} na Technicfix.`,
+    title: name,
+    description: `Produtos da categoria ${name} na TechnicFix.`,
   }
 }
 

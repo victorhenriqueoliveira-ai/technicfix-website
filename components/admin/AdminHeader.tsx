@@ -6,7 +6,7 @@ export async function AdminHeader() {
 
   return (
     <header className="flex h-16 items-center justify-between border-b bg-white px-6">
-      <span className="text-sm font-medium text-gray-700">Painel Admin</span>
+      <span className="text-sm font-medium text-gray-700">Painel Administrador</span>
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-600">{userEmail}</span>
         <form
@@ -17,7 +17,7 @@ export async function AdminHeader() {
         >
           <button
             type="submit"
-            className="rounded-md bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+            className="rounded-md bg-blue-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200 cursor-pointer transition-colors"
           >
             Sair
           </button>

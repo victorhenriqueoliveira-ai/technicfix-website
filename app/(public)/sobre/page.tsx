@@ -1,8 +1,12 @@
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 
 export const metadata = {
-  title: 'Sobre Nós | TechnicFix — Parafusos e Fixadores',
+  title: 'Sobre Nós',
   description: 'Conheça a história, missão e valores da TechnicFix — fixação que não falha.',
+  openGraph: {
+    title: 'Sobre Nós | TechnicFix',
+    description: 'Conheça a história, missão e valores da TechnicFix — fixação que não falha.',
+  },
 }
 
 export default function SobrePage() {

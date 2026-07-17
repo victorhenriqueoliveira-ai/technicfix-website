@@ -9,7 +9,15 @@ interface EditCategoriaPageProps {
 
 export default async function EditCategoriaPage({ params }: EditCategoriaPageProps) {
   const { id } = await params
-  const category = await db.category.findUnique({ where: { id } })
+
+  const [category, rootCategories] = await Promise.all([
+    db.category.findUnique({ where: { id } }),
+    db.category.findMany({
+      where: { parentId: null, NOT: { id } },
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true },
+    }),
+  ])
 
   if (!category) {
     notFound()
@@ -26,7 +34,9 @@ export default async function EditCategoriaPage({ params }: EditCategoriaPagePro
           name: category.name,
           slug: category.slug,
           imageUrl: category.imageUrl,
+          parentId: category.parentId,
         }}
+        categories={rootCategories}
         action={boundAction}
       />
     </div>
