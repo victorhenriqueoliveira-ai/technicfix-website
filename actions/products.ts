@@ -168,11 +168,12 @@ export async function deleteProduct(id: string): Promise<ProductActionResult> {
     return { success: false, error: 'Produto não encontrado.' }
   }
 
-  // Desvincular leads antes de excluir
   await db.lead.updateMany({
     where: { productId: id },
     data: { productId: null },
   })
+
+  await db.sale.deleteMany({ where: { productId: id } })
 
   await db.product.delete({ where: { id } })
 
