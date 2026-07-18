@@ -1,7 +1,7 @@
 /**
  * Testes unitários — actions/leads.ts
  *
- * Abordagem: mock do módulo `@/lib/prisma` e `resend` para isolar
+ * Abordagem: mock do módulo `@/lib/prisma`, `resend` e `@/lib/env` para isolar
  * a lógica da Server Action sem depender de banco real ou API de e-mail.
  */
 
@@ -9,6 +9,26 @@
 const mockLeadCreate = jest.fn()
 const mockSiteConfigFindUnique = jest.fn()
 const mockEmailsSend = jest.fn()
+
+// Mock de lib/env — valor inicial com RESEND_API_KEY definida
+// Os testes que precisam simular ausência da chave devem usar
+// jest.mocked ou re-exportar valores diferentes via jest.mock factory
+const mockEnv = {
+  RESEND_API_KEY: 're_test_key',
+  DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
+  UPLOADTHING_TOKEN: 'uploadthing_test_token',
+  AUTH_SECRET: 'auth_secret_value',
+  R2_ACCOUNT_ID: 'test-account',
+  R2_ACCESS_KEY_ID: 'test-key',
+  R2_SECRET_ACCESS_KEY: 'test-secret',
+  R2_BUCKET_NAME: 'test-bucket',
+  NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
+  NEXT_PUBLIC_SITE_URL: 'https://technicfix.com.br',
+}
+
+jest.mock('@/lib/env', () => ({
+  get env() { return mockEnv },
+}))
 
 jest.mock('@/lib/prisma', () => ({
   db: {
@@ -58,23 +78,25 @@ const payloadGeral = {
   phone: '11977777777',
 }
 
+// Configura valor de RESEND_API_KEY no mock de env (não em process.env)
 function setupEnvKey(value: string | undefined) {
   if (value === undefined) {
-    delete process.env.RESEND_API_KEY
+    mockEnv.RESEND_API_KEY = ''
   } else {
-    process.env.RESEND_API_KEY = value
+    mockEnv.RESEND_API_KEY = value
   }
 }
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockEnv.RESEND_API_KEY = 're_test_key'
   mockLeadCreate.mockResolvedValue({ id: 'lead-1', ...payloadVarejo })
   mockSiteConfigFindUnique.mockResolvedValue({ id: 'singleton', contactEmail: 'contato@technicfix.com.br' })
   mockEmailsSend.mockResolvedValue({ data: { id: 'email-1' }, error: null })
 })
 
 afterEach(() => {
-  delete process.env.RESEND_API_KEY
+  mockEnv.RESEND_API_KEY = 're_test_key'
 })
 
 describe('submitLead', () => {

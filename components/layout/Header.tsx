@@ -3,8 +3,9 @@ import Image from 'next/image'
 import { Menu } from 'lucide-react'
 import { HeaderSearchBar } from '@/components/layout/HeaderSearchBar'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { env } from '@/lib/env'
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
+const whatsappNumber = env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
 const whatsappHref = whatsappNumber
   ? `https://wa.me/55${whatsappNumber}`
   : '/contato'

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { env } from '@/lib/env'
 
 const navLinks = [
   { href: '/', label: 'Início' },
@@ -8,7 +9,7 @@ const navLinks = [
   { href: '/technocalhas', label: 'Technocalhas' },
 ]
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
+const whatsappNumber = env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
 const whatsappHref = whatsappNumber
   ? `https://wa.me/55${whatsappNumber}?text=Olá,%20gostaria%20de%20um%20orçamento!`
   : '/contato'

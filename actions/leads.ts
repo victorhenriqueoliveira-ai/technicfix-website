@@ -4,9 +4,10 @@ import { Resend } from 'resend'
 import { db } from '@/lib/prisma'
 import { leadSchema } from '@/lib/validations/lead'
 import type { LeadPayload } from '@/lib/types'
+import { env } from '@/lib/env'
 
 // Inicializa o cliente Resend no nível de módulo
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(env.RESEND_API_KEY)
 
 export async function submitLead(
   payload: LeadPayload
@@ -28,7 +29,7 @@ export async function submitLead(
   await db.lead.create({ data: dataToSave })
 
   // Envia e-mail de notificação de forma silenciosa (falha não bloqueia o retorno)
-  if (process.env.RESEND_API_KEY) {
+  if (env.RESEND_API_KEY) {
     const config = await db.siteConfig.findUnique({ where: { id: 'singleton' } })
 
     if (config?.contactEmail) {

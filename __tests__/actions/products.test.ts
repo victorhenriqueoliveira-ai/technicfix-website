@@ -1,7 +1,23 @@
 /**
  * Testes de integração para actions/products.ts
- * Usa mocks do Prisma, next/cache e AWS SDK — não conecta serviços externos
+ * Usa mocks do Prisma, next/cache, AWS SDK e lib/env — não conecta serviços externos
  */
+
+// Mock de lib/env (substitui acessos a env.* nos testes)
+jest.mock('@/lib/env', () => ({
+  env: {
+    R2_ACCOUNT_ID: 'test-account',
+    R2_ACCESS_KEY_ID: 'test-key',
+    R2_SECRET_ACCESS_KEY: 'test-secret',
+    R2_BUCKET_NAME: 'test-bucket',
+    RESEND_API_KEY: 'resend_test_key',
+    DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
+    UPLOADTHING_TOKEN: 'uploadthing_test_token',
+    AUTH_SECRET: 'auth_secret_value',
+    NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
+    NEXT_PUBLIC_SITE_URL: 'https://technicfix.com.br',
+  },
+}))
 
 // Mock do next/cache
 const mockRevalidatePath = jest.fn()
@@ -66,10 +82,6 @@ const baseProduct = {
 
 beforeEach(() => {
   jest.clearAllMocks()
-  process.env.R2_ACCOUNT_ID = 'test-account'
-  process.env.R2_ACCESS_KEY_ID = 'test-key'
-  process.env.R2_SECRET_ACCESS_KEY = 'test-secret'
-  process.env.R2_BUCKET_NAME = 'test-bucket'
 })
 
 // ─── createProduct ────────────────────────────────────────────────────────────

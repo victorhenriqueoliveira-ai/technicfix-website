@@ -3,6 +3,22 @@
  * Valida o comportamento de singleton do Prisma Client
  */
 
+// Mock de lib/env para não precisar de vars de ambiente reais
+jest.mock('@/lib/env', () => ({
+  env: {
+    DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
+    RESEND_API_KEY: 'resend_test_key',
+    UPLOADTHING_TOKEN: 'uploadthing_test_token',
+    AUTH_SECRET: 'auth_secret_value',
+    R2_ACCOUNT_ID: 'r2_account_id',
+    R2_ACCESS_KEY_ID: 'r2_access_key',
+    R2_SECRET_ACCESS_KEY: 'r2_secret',
+    R2_BUCKET_NAME: 'bucket-name',
+    NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
+    NEXT_PUBLIC_SITE_URL: 'https://technicfix.com.br',
+  },
+}))
+
 // Mock do PrismaClient antes de importar o módulo
 const mockPrismaClient = jest.fn()
 jest.mock('@prisma/client', () => ({
