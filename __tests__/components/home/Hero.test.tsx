@@ -56,16 +56,14 @@ describe('Hero', () => {
   })
 
   describe('Fallback amber', () => {
-    it('exibe fallback amber com texto "Fixação que não Falha" quando banners é vazio', () => {
+    it('exibe fallback (picture) quando banners é vazio', () => {
       render(<Hero banners={[]} />)
       expect(screen.getByTestId('hero-fallback')).toBeInTheDocument()
-      expect(screen.getByTestId('hero-fallback-text')).toHaveTextContent('Fixação que não Falha')
     })
 
-    it('exibe fallback amber quando banner tem imageUrl vazio', () => {
+    it('exibe fallback quando banner tem imageUrl vazio', () => {
       render(<Hero banners={[makeBanner({ imageUrl: '' })]} />)
       expect(screen.getByTestId('hero-fallback')).toBeInTheDocument()
-      expect(screen.getByTestId('hero-fallback-text')).toHaveTextContent('Fixação que não Falha')
     })
 
     it('não crasha com imageUrl null', () => {
@@ -74,10 +72,10 @@ describe('Hero', () => {
       expect(screen.getByTestId('hero-fallback')).toBeInTheDocument()
     })
 
-    it('fallback tem classe bg-brand-amber', () => {
+    it('fallback exibe imagem /banner.png', () => {
       render(<Hero banners={[]} />)
-      const fallback = screen.getByTestId('hero-fallback')
-      expect(fallback.className).toContain('bg-brand-amber')
+      const img = screen.getByTestId('hero-image')
+      expect(img).toHaveAttribute('src', '/banner.png')
     })
   })
 
@@ -98,10 +96,17 @@ describe('Hero', () => {
       expect(screen.getByRole('region', { name: 'Banner principal' })).toBeInTheDocument()
     })
 
-    it('container tem style height 420px', () => {
+    it('container não tem inline style de height', () => {
       render(<Hero banners={[makeBanner()]} />)
       const section = screen.getByTestId('hero-section')
-      expect(section).toHaveStyle({ height: '420px' })
+      expect(section).not.toHaveStyle({ height: '650px' })
+      expect(section.getAttribute('style')).toBeFalsy()
+    })
+
+    it('container tem classe h-[650px] no className', () => {
+      render(<Hero banners={[makeBanner()]} />)
+      const section = screen.getByTestId('hero-section')
+      expect(section.className).toContain('h-[650px]')
     })
 
     it('não tem elemento com overlay navy escuro sobre a imagem', () => {
