@@ -1,21 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu } from 'lucide-react'
-import { CategoryNav, CategoryAccordion } from '@/components/layout/CategoryNav'
 import { HeaderSearchBar } from '@/components/layout/HeaderSearchBar'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { CategorySummary } from '@/lib/types'
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
 const whatsappHref = whatsappNumber
   ? `https://wa.me/55${whatsappNumber}`
   : '/contato'
 
-interface HeaderProps {
-  categories?: CategorySummary[]
-}
-
-export function Header({ categories = [] }: HeaderProps) {
+export function Header() {
   return (
     <header className="sticky top-0 z-40 shadow-md">
       {/* Camada 1 — TopBar: desktop only */}
@@ -74,13 +68,6 @@ export function Header({ categories = [] }: HeaderProps) {
                 <div className="px-4 py-3 border-b border-gray-100">
                   <HeaderSearchBar className="w-full" />
                 </div>
-                {/* Categorias */}
-                {/* <nav className="flex-1 overflow-y-auto" aria-label="Categorias">
-                  <p className="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Categorias
-                  </p>
-                  <CategoryAccordion categories={categories} variant="light" />
-                </nav> */}
                 {/* WhatsApp — rodapé do drawer */}
                 <div className="p-4 border-t border-gray-100">
                   <a
@@ -100,8 +87,6 @@ export function Header({ categories = [] }: HeaderProps) {
         </div>
       </div>
 
-      {/* Camada 3 — CategoryNav (desktop)
-      <CategoryNav categories={categories} /> */}
     </header>
   )
 }

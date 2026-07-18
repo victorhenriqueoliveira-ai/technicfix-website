@@ -1,11 +1,6 @@
-import { Truck, MessageCircle, ShieldCheck, Package } from 'lucide-react'
+import { MessageCircle, ShieldCheck, Package } from 'lucide-react'
 
 const BENEFITS = [
-  // {
-  //   Icon: Truck,
-  //   title: 'Frete para Todo o Brasil',
-  //   description: 'Correios e transportadoras',
-  // },
   {
     Icon: MessageCircle,
     title: 'Atendimento via WhatsApp',
