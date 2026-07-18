@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@base-ui/react/Slider": ["./node_modules/@base-ui/react/slider/index.parts.d.ts"]
+      "@base-ui/react/Slider": ["./node_modules/@base-ui/react/slider/index.d.mts"]
     }
   },
   "include": [

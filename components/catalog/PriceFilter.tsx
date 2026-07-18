@@ -1,6 +1,6 @@
 'use client'
 
-import * as Slider from '@base-ui/react/Slider'
+import { Slider } from '@base-ui/react/Slider'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
