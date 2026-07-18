@@ -12,6 +12,11 @@ export interface CategorySummary {
   children: CategorySummary[]
 }
 
+export interface ProductNavItem {
+  name: string
+  slug: string
+}
+
 export interface CategoryWithProducts {
   id: string
   name: string
