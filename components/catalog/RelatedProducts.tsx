@@ -55,9 +55,11 @@ export async function RelatedProducts({
   return (
     <section aria-label="Produtos Relacionados" className="mt-12">
       <h2 className="mb-6 text-2xl font-bold text-brand-navy">Produtos Relacionados</h2>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+      <div className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {products.map((p) => (
+          <div key={p.id} className="w-52 sm:w-60 flex-none snap-start">
+            <ProductCard product={p} />
+          </div>
         ))}
       </div>
     </section>
