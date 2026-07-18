@@ -9,12 +9,14 @@
 const mockFindMany = jest.fn()
 const mockCount = jest.fn()
 const mockCategoryFindMany = jest.fn()
+const mockAggregate = jest.fn()
 
 jest.mock('@/lib/prisma', () => ({
   db: {
     product: {
       findMany: (...args: unknown[]) => mockFindMany(...args),
       count: (...args: unknown[]) => mockCount(...args),
+      aggregate: (...args: unknown[]) => mockAggregate(...args),
     },
     category: {
       findMany: (...args: unknown[]) => mockCategoryFindMany(...args),
@@ -26,6 +28,7 @@ jest.mock('@/lib/prisma', () => ({
 jest.mock('@/components/catalog/ProductCard', () => ({ ProductCard: () => null }))
 jest.mock('@/components/catalog/CategoryFilter', () => ({ CategoryFilter: () => null }))
 jest.mock('@/components/catalog/SearchBar', () => ({ SearchBar: () => null }))
+jest.mock('@/components/catalog/PriceFilter', () => ({ PriceFilter: () => null }))
 jest.mock('next/link', () => ({ default: () => null }))
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
@@ -52,11 +55,18 @@ const productAtivo = {
   leads: [],
 }
 
+const priceRangeDefault = {
+  _min: { price: 0 },
+  _max: { price: 1000 },
+}
+
 beforeEach(() => {
   mockFindMany.mockReset()
   mockCount.mockReset()
   mockCategoryFindMany.mockReset()
+  mockAggregate.mockReset()
   mockCategoryFindMany.mockResolvedValue([])
+  mockAggregate.mockResolvedValue(priceRangeDefault)
 })
 
 describe('Página de listagem — /produtos', () => {
@@ -74,14 +84,6 @@ describe('Página de listagem — /produtos', () => {
   it('query ao Prisma filtra apenas produtos com status "ativo"', async () => {
     mockFindMany.mockResolvedValue([])
     mockCount.mockResolvedValue(0)
-
-    jest.resetModules()
-    jest.mock('@/lib/prisma', () => ({
-      db: {
-        product: { findMany: mockFindMany, count: mockCount },
-        category: { findMany: mockCategoryFindMany },
-      },
-    }))
 
     const { default: ProdutosPage } = await import('@/app/(public)/produtos/page')
     await ProdutosPage({ searchParams: Promise.resolve({}) })

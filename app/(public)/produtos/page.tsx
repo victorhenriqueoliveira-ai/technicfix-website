@@ -1,21 +1,13 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Prisma } from '@prisma/client'
 import { db } from '@/lib/prisma'
 import { ProductCard } from '@/components/catalog/ProductCard'
 import { CategoryFilter } from '@/components/catalog/CategoryFilter'
 import { SearchBar } from '@/components/catalog/SearchBar'
+import { PriceFilter } from '@/components/catalog/PriceFilter'
 import { Suspense } from 'react'
 import type { ProductSummary, ProductWithCategory } from '@/lib/types'
-
-export const metadata: Metadata = {
-  title: 'Produtos',
-  description:
-    'Catálogo completo de parafusos, fixadores e materiais de construção. Encontre o produto ideal para sua obra.',
-  openGraph: {
-    title: 'Produtos | TechnicFix',
-    description: 'Catálogo completo de parafusos, fixadores e materiais de construção.',
-  },
-}
 
 const ITEMS_PER_PAGE = 12
 
@@ -24,7 +16,32 @@ interface ProdutosPageProps {
     categoria?: string
     busca?: string
     page?: string
+    minPrice?: string
+    maxPrice?: string
   }>
+}
+
+export async function generateMetadata({ searchParams }: ProdutosPageProps): Promise<Metadata> {
+  const { categoria } = await searchParams
+  if (categoria) {
+    return {
+      title: 'Produtos',
+      description:
+        'Catálogo completo de parafusos, fixadores e materiais de construção. Encontre o produto ideal para sua obra.',
+      alternates: {
+        canonical: `/categorias/${categoria}`,
+      },
+    }
+  }
+  return {
+    title: 'Produtos',
+    description:
+      'Catálogo completo de parafusos, fixadores e materiais de construção. Encontre o produto ideal para sua obra.',
+    openGraph: {
+      title: 'Produtos | TechnicFix',
+      description: 'Catálogo completo de parafusos, fixadores e materiais de construção.',
+    },
+  }
 }
 
 export default async function ProdutosPage({ searchParams }: ProdutosPageProps) {
@@ -32,33 +49,51 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
   const categoria = params.categoria
   const busca = params.busca
   const page = Math.max(1, parseInt(params.page ?? '1', 10))
+  const minPrice = params.minPrice
+  const maxPrice = params.maxPrice
   const skip = (page - 1) * ITEMS_PER_PAGE
 
-  const [products, total, categories] = await Promise.all([
+  const priceCondition: Prisma.ProductWhereInput =
+    minPrice !== undefined && maxPrice !== undefined
+      ? { price: { gte: new Prisma.Decimal(minPrice), lte: new Prisma.Decimal(maxPrice) } }
+      : minPrice !== undefined
+        ? { price: { gte: new Prisma.Decimal(minPrice) } }
+        : maxPrice !== undefined
+          ? { price: { lte: new Prisma.Decimal(maxPrice) } }
+          : {}
+
+  const baseWhere: Prisma.ProductWhereInput = {
+    status: 'ativo',
+    ...(categoria ? { category: { slug: categoria } } : {}),
+    ...(busca ? { name: { contains: busca, mode: 'insensitive' } } : {}),
+    ...priceCondition,
+  }
+
+  const [products, total, categories, priceRange] = await Promise.all([
     db.product.findMany({
-      where: {
-        status: 'ativo',
-        ...(categoria ? { category: { slug: categoria } } : {}),
-        ...(busca ? { name: { contains: busca, mode: 'insensitive' } } : {}),
-      },
+      where: baseWhere,
       include: { category: true },
       skip,
       take: ITEMS_PER_PAGE,
       orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
     }),
-    db.product.count({
-      where: {
-        status: 'ativo',
-        ...(categoria ? { category: { slug: categoria } } : {}),
-        ...(busca ? { name: { contains: busca, mode: 'insensitive' } } : {}),
-      },
-    }),
+    db.product.count({ where: baseWhere }),
     db.category.findMany({ orderBy: { name: 'asc' } }),
+    db.product.aggregate({
+      _min: { price: true },
+      _max: { price: true },
+      where: { status: 'ativo', price: { not: null } },
+    }),
   ])
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE)
 
-  const productSummaries: ProductSummary[] = (products as ProductWithCategory[]).map((p) => ({
+  const globalMin = priceRange._min.price !== null ? Number(priceRange._min.price) : 0
+  const globalMax = priceRange._max.price !== null ? Number(priceRange._max.price) : 1000
+  const currentMin = minPrice !== undefined ? Number(minPrice) : globalMin
+  const currentMax = maxPrice !== undefined ? Number(maxPrice) : globalMax
+
+  const productSummaries: ProductSummary[] = (products as unknown as ProductWithCategory[]).map((p) => ({
     id: p.id,
     name: p.name,
     slug: p.slug,
@@ -98,6 +133,14 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
                 Categorias
               </div>
               <CategoryFilter categories={categories} activeSlug={categoria} />
+              <Suspense>
+                <PriceFilter
+                  min={globalMin}
+                  max={globalMax}
+                  currentMin={currentMin}
+                  currentMax={currentMax}
+                />
+              </Suspense>
             </div>
           </aside>
 
@@ -134,6 +177,8 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
                         href={`/produtos?${new URLSearchParams({
                           ...(categoria ? { categoria } : {}),
                           ...(busca ? { busca } : {}),
+                          ...(minPrice ? { minPrice } : {}),
+                          ...(maxPrice ? { maxPrice } : {}),
                           page: String(page - 1),
                         })}`}
                         className="rounded-xl border-2 border-brand-navy px-4 py-2 text-sm font-bold text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"
@@ -149,6 +194,8 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
                         href={`/produtos?${new URLSearchParams({
                           ...(categoria ? { categoria } : {}),
                           ...(busca ? { busca } : {}),
+                          ...(minPrice ? { minPrice } : {}),
+                          ...(maxPrice ? { maxPrice } : {}),
                           page: String(page + 1),
                         })}`}
                         className="rounded-xl border-2 border-brand-navy px-4 py-2 text-sm font-bold text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"

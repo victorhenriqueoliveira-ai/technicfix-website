@@ -61,6 +61,7 @@ function revalidateAll() {
   revalidatePath('/admin/produtos')
   revalidatePath('/')
   revalidatePath('/produtos')
+  revalidatePath('/categorias/[slug]', 'page')
 }
 
 // ─── createProduct ────────────────────────────────────────────────────────────
