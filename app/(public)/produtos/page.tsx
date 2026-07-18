@@ -5,7 +5,7 @@ import { ProductCard } from '@/components/catalog/ProductCard'
 import { CategoryFilter } from '@/components/catalog/CategoryFilter'
 import { SearchBar } from '@/components/catalog/SearchBar'
 import { Suspense } from 'react'
-import type { ProductSummary } from '@/lib/types'
+import type { ProductSummary, ProductWithCategory } from '@/lib/types'
 
 export const metadata: Metadata = {
   title: 'Produtos',
@@ -15,18 +15,6 @@ export const metadata: Metadata = {
     title: 'Produtos | TechnicFix',
     description: 'Catálogo completo de parafusos, fixadores e materiais de construção.',
   },
-}
-
-/** Tipo local para produto retornado pelo Prisma com category incluída */
-interface ProductWithCategory {
-  id: string
-  name: string
-  slug: string
-  price: number | null | { toNumber?: () => number }
-  images: string[]
-  featured: boolean
-  showPrice: boolean
-  category: { name: string; slug: string }
 }
 
 const ITEMS_PER_PAGE = 12
