@@ -17,10 +17,6 @@ jest.mock('@/lib/env', () => ({
     RESEND_API_KEY: 'resend_test_key',
     UPLOADTHING_TOKEN: 'uploadthing_test_token',
     AUTH_SECRET: 'auth_secret_test_value',
-    R2_ACCOUNT_ID: 'test-account',
-    R2_ACCESS_KEY_ID: 'test-key',
-    R2_SECRET_ACCESS_KEY: 'test-secret',
-    R2_BUCKET_NAME: 'test-bucket',
     NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
   },
 }))

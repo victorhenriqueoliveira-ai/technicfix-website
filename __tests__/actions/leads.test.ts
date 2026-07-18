@@ -16,10 +16,6 @@ const mockEnv = {
   DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
   UPLOADTHING_TOKEN: 'uploadthing_test_token',
   AUTH_SECRET: 'auth_secret_value',
-  R2_ACCOUNT_ID: 'test-account',
-  R2_ACCESS_KEY_ID: 'test-key',
-  R2_SECRET_ACCESS_KEY: 'test-secret',
-  R2_BUCKET_NAME: 'test-bucket',
   NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
   NEXT_PUBLIC_SITE_URL: 'https://technicfix.com.br',
 }

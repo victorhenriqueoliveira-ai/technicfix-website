@@ -11,10 +11,6 @@ const VALID_ENV = {
   RESEND_API_KEY:              'resend_test_key',
   UPLOADTHING_TOKEN:           'uploadthing_test_token',
   AUTH_SECRET:                 'auth_secret_value',
-  R2_ACCOUNT_ID:               'r2_account_id',
-  R2_ACCESS_KEY_ID:            'r2_access_key',
-  R2_SECRET_ACCESS_KEY:        'r2_secret',
-  R2_BUCKET_NAME:              'bucket-name',
   NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
   NEXT_PUBLIC_SITE_URL:        'https://technicfix.com.br',
 }
@@ -54,10 +50,6 @@ describe('lib/env.ts — schema Zod', () => {
     expect(env.RESEND_API_KEY).toBe(VALID_ENV.RESEND_API_KEY)
     expect(env.UPLOADTHING_TOKEN).toBe(VALID_ENV.UPLOADTHING_TOKEN)
     expect(env.AUTH_SECRET).toBe(VALID_ENV.AUTH_SECRET)
-    expect(env.R2_ACCOUNT_ID).toBe(VALID_ENV.R2_ACCOUNT_ID)
-    expect(env.R2_ACCESS_KEY_ID).toBe(VALID_ENV.R2_ACCESS_KEY_ID)
-    expect(env.R2_SECRET_ACCESS_KEY).toBe(VALID_ENV.R2_SECRET_ACCESS_KEY)
-    expect(env.R2_BUCKET_NAME).toBe(VALID_ENV.R2_BUCKET_NAME)
     expect(env.NEXT_PUBLIC_WHATSAPP_NUMBER).toBe(VALID_ENV.NEXT_PUBLIC_WHATSAPP_NUMBER)
     expect(env.NEXT_PUBLIC_SITE_URL).toBe(VALID_ENV.NEXT_PUBLIC_SITE_URL)
   })
@@ -91,15 +83,6 @@ describe('lib/env.ts — schema Zod', () => {
 
   it('lança Error quando AUTH_SECRET está ausente', () => {
     setEnv({ AUTH_SECRET: undefined })
-    expect(() => {
-      jest.isolateModules(() => {
-        require('@/lib/env')
-      })
-    }).toThrow('[Technicfix] Configuração de ambiente incompleta.')
-  })
-
-  it('lança Error quando R2_BUCKET_NAME é string vazia', () => {
-    setEnv({ R2_BUCKET_NAME: '' })
     expect(() => {
       jest.isolateModules(() => {
         require('@/lib/env')
