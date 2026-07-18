@@ -7,6 +7,35 @@
  * testes de integração da página.
  */
 
+// ─── Teste do import corrigido do @base-ui/react/Slider ───────────────────────
+// Verifica que `import { Slider } from '@base-ui/react/Slider'` resulta em
+// sub-componentes acessíveis (não undefined), conforme task_08.
+
+describe('Slider import — sub-componentes definidos após correção do import', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { Slider } = require('@base-ui/react/Slider') as { Slider: Record<string, unknown> }
+
+  it('Slider.Root é definido', () => {
+    expect(Slider.Root).toBeDefined()
+  })
+
+  it('Slider.Control é definido', () => {
+    expect(Slider.Control).toBeDefined()
+  })
+
+  it('Slider.Track é definido', () => {
+    expect(Slider.Track).toBeDefined()
+  })
+
+  it('Slider.Indicator é definido', () => {
+    expect(Slider.Indicator).toBeDefined()
+  })
+
+  it('Slider.Thumb é definido', () => {
+    expect(Slider.Thumb).toBeDefined()
+  })
+})
+
 // ─── Teste da função formatBRL ─────────────────────────────────────────────────
 
 function formatBRL(value: number): string {
