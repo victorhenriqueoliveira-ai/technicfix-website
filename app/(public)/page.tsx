@@ -4,8 +4,9 @@ import { getCategoriesWithProducts } from '@/lib/data/categories'
 import { Hero } from '@/components/home/Hero'
 import { BenefitsBar } from '@/components/home/BenefitsBar'
 import { CategoryProductSection } from '@/components/home/CategoryProductSection'
+import { env } from '@/lib/env'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://technicfix.com.br'
+const siteUrl = env.NEXT_PUBLIC_SITE_URL
 
 export const metadata: Metadata = {
   title: {

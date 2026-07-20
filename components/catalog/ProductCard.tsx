@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { getProductImageSrc } from '@/lib/utils/image'
+import { getProductImageSrc, shimmerDataURL } from '@/lib/utils/image'
 import type { ProductSummary } from '@/lib/types'
 import { LeadVarejoModal } from '@/components/leads/LeadVarejoModal'
 import { LeadAtacadoModal } from '@/components/leads/LeadAtacadoModal'
@@ -18,17 +18,21 @@ export function ProductCard({ product }: ProductCardProps) {
   const imageSrc = getProductImageSrc(product.images)
   const [varejoOpen, setVarejoOpen] = useState(false)
   const [atacadoOpen, setAtacadoOpen] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   return (
     <>
       <article className="group flex flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-sm transition-all duration-200 hover:border-brand-amber hover:shadow-lg hover:shadow-brand-amber/10">
         {/* Imagem */}
-        <Link href={`/produtos/${product.slug}`} className="relative block aspect-square overflow-hidden bg-gray-50">
+        <Link href={`/produtos/${product.slug}`} className={`relative block aspect-square overflow-hidden bg-gray-200 ${!imgLoaded ? 'animate-pulse' : ''}`}>
           {imageSrc ? (
             <Image
               src={imageSrc}
               alt={product.name}
               fill
+              placeholder="blur"
+              blurDataURL={shimmerDataURL}
+              onLoad={() => setImgLoaded(true)}
               className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (

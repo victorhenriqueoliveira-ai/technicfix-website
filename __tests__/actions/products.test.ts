@@ -1,22 +1,24 @@
 /**
  * Testes de integração para actions/products.ts
- * Usa mocks do Prisma, next/cache e AWS SDK — não conecta serviços externos
+ * Usa mocks do Prisma, next/cache, AWS SDK e lib/env — não conecta serviços externos
  */
+
+// Mock de lib/env (substitui acessos a env.* nos testes)
+jest.mock('@/lib/env', () => ({
+  env: {
+    RESEND_API_KEY: 'resend_test_key',
+    DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
+    UPLOADTHING_TOKEN: 'uploadthing_test_token',
+    AUTH_SECRET: 'auth_secret_value',
+    NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
+    NEXT_PUBLIC_SITE_URL: 'https://technicfix.com.br',
+  },
+}))
 
 // Mock do next/cache
 const mockRevalidatePath = jest.fn()
 jest.mock('next/cache', () => ({
   revalidatePath: (...args: unknown[]) => mockRevalidatePath(...args),
-}))
-
-// Mock do AWS SDK
-const mockGetSignedUrl = jest.fn()
-jest.mock('@aws-sdk/s3-request-presigner', () => ({
-  getSignedUrl: (...args: unknown[]) => mockGetSignedUrl(...args),
-}))
-jest.mock('@aws-sdk/client-s3', () => ({
-  S3Client: jest.fn().mockImplementation(() => ({})),
-  PutObjectCommand: jest.fn().mockImplementation((params) => params),
 }))
 
 // Mocks do db
@@ -44,7 +46,7 @@ jest.mock('@/lib/prisma', () => ({
   },
 }))
 
-import { createProduct, updateProduct, deleteProduct, getPresignedUploadUrl } from '@/actions/products'
+import { createProduct, updateProduct, deleteProduct } from '@/actions/products'
 
 function makeFormData(fields: Record<string, string>): FormData {
   const fd = new FormData()
@@ -66,10 +68,6 @@ const baseProduct = {
 
 beforeEach(() => {
   jest.clearAllMocks()
-  process.env.R2_ACCOUNT_ID = 'test-account'
-  process.env.R2_ACCESS_KEY_ID = 'test-key'
-  process.env.R2_SECRET_ACCESS_KEY = 'test-secret'
-  process.env.R2_BUCKET_NAME = 'test-bucket'
 })
 
 // ─── createProduct ────────────────────────────────────────────────────────────
@@ -382,61 +380,3 @@ describe('updateProduct — campos showPrice, productType, relatedProductIds', (
   })
 })
 
-// ─── getPresignedUploadUrl ────────────────────────────────────────────────────
-
-describe('getPresignedUploadUrl', () => {
-  it('retorna url e key para arquivo JPEG válido', async () => {
-    mockGetSignedUrl.mockResolvedValue('https://r2.example.com/presigned-url?sig=xyz')
-
-    const result = await getPresignedUploadUrl('foto.jpg', 'image/jpeg', 1024 * 1024)
-
-    expect(result).toEqual(
-      expect.objectContaining({
-        url: 'https://r2.example.com/presigned-url?sig=xyz',
-        key: expect.stringMatching(/^products\/\d+-foto\.jpg$/),
-      })
-    )
-    expect(mockGetSignedUrl).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        Bucket: 'test-bucket',
-        ContentType: 'image/jpeg',
-      }),
-      expect.objectContaining({ expiresIn: 300 })
-    )
-  })
-
-  it('retorna url e key para arquivo PNG válido', async () => {
-    mockGetSignedUrl.mockResolvedValue('https://r2.example.com/png-url')
-
-    const result = await getPresignedUploadUrl('imagem.png', 'image/png')
-
-    expect('url' in result && result.url).toBe('https://r2.example.com/png-url')
-    expect('key' in result && result.key).toMatch(/^products\//)
-  })
-
-  it('retorna erro para tipo MIME não permitido', async () => {
-    const result = await getPresignedUploadUrl('video.mp4', 'video/mp4')
-
-    expect('error' in result).toBe(true)
-    expect((result as { error: string }).error).toMatch(/não permitido/)
-    expect(mockGetSignedUrl).not.toHaveBeenCalled()
-  })
-
-  it('retorna erro para arquivo maior que 5MB', async () => {
-    const result = await getPresignedUploadUrl('grande.jpg', 'image/jpeg', 6 * 1024 * 1024)
-
-    expect('error' in result).toBe(true)
-    expect((result as { error: string }).error).toMatch(/grande/)
-    expect(mockGetSignedUrl).not.toHaveBeenCalled()
-  })
-
-  it('permite WebP como tipo de arquivo', async () => {
-    mockGetSignedUrl.mockResolvedValue('https://r2.example.com/webp-url')
-
-    const result = await getPresignedUploadUrl('imagem.webp', 'image/webp', 2 * 1024 * 1024)
-
-    expect('url' in result).toBe(true)
-    expect(mockGetSignedUrl).toHaveBeenCalled()
-  })
-})

@@ -14,9 +14,10 @@ interface Suggestion {
 
 interface HeaderSearchBarProps {
   className?: string
+  onSearch?: () => void
 }
 
-export function HeaderSearchBar({ className }: HeaderSearchBarProps) {
+export function HeaderSearchBar({ className, onSearch }: HeaderSearchBarProps) {
   const [value, setValue] = useState('')
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [open, setOpen] = useState(false)
@@ -71,6 +72,7 @@ export function HeaderSearchBar({ className }: HeaderSearchBarProps) {
     const trimmed = value.trim()
     if (!trimmed) return
     setOpen(false)
+    onSearch?.()
     router.push('/produtos?busca=' + encodeURIComponent(trimmed))
     setValue('')
   }
@@ -78,6 +80,7 @@ export function HeaderSearchBar({ className }: HeaderSearchBarProps) {
   function handleSelect(slug: string) {
     setOpen(false)
     setValue('')
+    onSearch?.()
     router.push('/produtos/' + slug)
   }
 
@@ -168,6 +171,7 @@ export function HeaderSearchBar({ className }: HeaderSearchBarProps) {
             onMouseDown={(e) => {
               e.preventDefault()
               setOpen(false)
+              onSearch?.()
               router.push('/produtos?busca=' + encodeURIComponent(value.trim()))
               setValue('')
             }}

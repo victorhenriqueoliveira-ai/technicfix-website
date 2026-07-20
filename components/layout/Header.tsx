@@ -1,21 +1,23 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu } from 'lucide-react'
-import { CategoryNav, CategoryAccordion } from '@/components/layout/CategoryNav'
 import { HeaderSearchBar } from '@/components/layout/HeaderSearchBar'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { CategorySummary } from '@/lib/types'
+import { CategoryNav } from '@/components/layout/CategoryNav'
+import { ProductsDropdown } from '@/components/layout/ProductsDropdown'
+import { MobileMenu } from '@/components/layout/MobileMenu'
+import { getCategoriesForNav, getProductsForNav } from '@/lib/nav-data'
+import { env } from '@/lib/env'
 
-const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
+const whatsappNumber = env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
 const whatsappHref = whatsappNumber
   ? `https://wa.me/55${whatsappNumber}`
   : '/contato'
 
-interface HeaderProps {
-  categories?: CategorySummary[]
-}
+export async function Header() {
+  const [categories, products] = await Promise.all([
+    getCategoriesForNav(),
+    getProductsForNav(),
+  ])
 
-export function Header({ categories = [] }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 shadow-md">
       {/* Camada 1 — TopBar: desktop only */}
@@ -23,7 +25,7 @@ export function Header({ categories = [] }: HeaderProps) {
         Atendimento via WhatsApp · Variedade de Fixadores
       </div>
 
-      {/* Camada 2 — MainBar: logo + busca + CTA */}
+      {/* Camada 2 — MainBar: logo + busca + produtos + CTA + mobile */}
       <div className="bg-white border-b border-gray-100 px-4">
         <div className="max-w-7xl mx-auto flex items-center gap-4">
 
@@ -44,6 +46,9 @@ export function Header({ categories = [] }: HeaderProps) {
             <HeaderSearchBar className="w-full" />
           </div>
 
+          {/* Dropdown de produtos — desktop only */}
+          <ProductsDropdown products={products} />
+
           {/* WhatsApp CTA — desktop only */}
           <a
             href={whatsappHref}
@@ -56,52 +61,15 @@ export function Header({ categories = [] }: HeaderProps) {
             WhatsApp
           </a>
 
-          {/* Hamburguer — mobile only, empurrado para a direita */}
-          <div className="md:hidden ml-auto">
-            <Sheet>
-              <SheetTrigger
-                aria-label="Abrir menu"
-                className="flex items-center justify-center h-9 w-9 rounded-md text-gray-600 hover:bg-gray-100"
-              >
-                <Menu className="h-5 w-5" />
-              </SheetTrigger>
-              <SheetContent side="right" className="bg-white w-72 p-0 flex flex-col gap-0">
-                {/* Cabeçalho do drawer */}
-                <div className="flex items-center px-4 py-3 border-b border-gray-100">
-                  <span className="text-sm font-semibold text-gray-900">Menu</span>
-                </div>
-                {/* Busca */}
-                <div className="px-4 py-3 border-b border-gray-100">
-                  <HeaderSearchBar className="w-full" />
-                </div>
-                {/* Categorias */}
-                {/* <nav className="flex-1 overflow-y-auto" aria-label="Categorias">
-                  <p className="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Categorias
-                  </p>
-                  <CategoryAccordion categories={categories} variant="light" />
-                </nav> */}
-                {/* WhatsApp — rodapé do drawer */}
-                <div className="p-4 border-t border-gray-100">
-                  <a
-                    href={whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full rounded-full bg-brand-amber py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-amber-dark"
-                  >
-                    <WhatsAppIcon className="h-5 w-5" />
-                    Falar no WhatsApp
-                  </a>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+          {/* Menu mobile — hamburguer + Sheet com categorias e produtos */}
+          <MobileMenu categories={categories} products={products} />
 
         </div>
       </div>
 
-      {/* Camada 3 — CategoryNav (desktop)
-      <CategoryNav categories={categories} /> */}
+      {/* Camada 3 — CategoryNav: desktop only */}
+      <CategoryNav categories={categories} />
+
     </header>
   )
 }

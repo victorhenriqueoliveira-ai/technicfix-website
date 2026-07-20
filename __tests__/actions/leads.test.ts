@@ -1,7 +1,7 @@
 /**
  * Testes unitários — actions/leads.ts
  *
- * Abordagem: mock do módulo `@/lib/prisma` e `resend` para isolar
+ * Abordagem: mock do módulo `@/lib/prisma`, `resend` e `@/lib/env` para isolar
  * a lógica da Server Action sem depender de banco real ou API de e-mail.
  */
 
@@ -9,6 +9,20 @@
 const mockLeadCreate = jest.fn()
 const mockSiteConfigFindUnique = jest.fn()
 const mockEmailsSend = jest.fn()
+
+// Mock de lib/env — valor inicial com RESEND_API_KEY definida
+const mockEnv = {
+  RESEND_API_KEY: 're_test_key',
+  DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
+  UPLOADTHING_TOKEN: 'uploadthing_test_token',
+  AUTH_SECRET: 'auth_secret_value',
+  NEXT_PUBLIC_WHATSAPP_NUMBER: '11999999999',
+  NEXT_PUBLIC_SITE_URL: 'https://technicfix.com.br',
+}
+
+jest.mock('@/lib/env', () => ({
+  get env() { return mockEnv },
+}))
 
 jest.mock('@/lib/prisma', () => ({
   db: {
@@ -58,23 +72,35 @@ const payloadGeral = {
   phone: '11977777777',
 }
 
+// Configura valor de RESEND_API_KEY no mock de env (não em process.env)
 function setupEnvKey(value: string | undefined) {
   if (value === undefined) {
-    delete process.env.RESEND_API_KEY
+    mockEnv.RESEND_API_KEY = ''
   } else {
-    process.env.RESEND_API_KEY = value
+    mockEnv.RESEND_API_KEY = value
   }
+}
+
+/**
+ * Aguarda todas as microtasks e macrotasks pendentes (incluindo timers fake)
+ * para garantir que o fire-and-forget termine antes das asserções.
+ */
+async function flushAsync(ms = 0) {
+  await new Promise(resolve => setTimeout(resolve, ms))
 }
 
 beforeEach(() => {
   jest.clearAllMocks()
+  jest.useFakeTimers()
+  mockEnv.RESEND_API_KEY = 're_test_key'
   mockLeadCreate.mockResolvedValue({ id: 'lead-1', ...payloadVarejo })
   mockSiteConfigFindUnique.mockResolvedValue({ id: 'singleton', contactEmail: 'contato@technicfix.com.br' })
   mockEmailsSend.mockResolvedValue({ data: { id: 'email-1' }, error: null })
 })
 
 afterEach(() => {
-  delete process.env.RESEND_API_KEY
+  jest.useRealTimers()
+  mockEnv.RESEND_API_KEY = 're_test_key'
 })
 
 describe('submitLead', () => {
@@ -82,18 +108,25 @@ describe('submitLead', () => {
     beforeEach(() => setupEnvKey('re_test_key'))
 
     it('deve criar lead e chamar resend.emails.send uma vez', async () => {
-      const result = await submitLead(payloadVarejo)
+      const promise = submitLead(payloadVarejo)
+      // avança timers para resolver o fire-and-forget
+      jest.runAllTimersAsync()
+      const result = await promise
 
       expect(result).toEqual({ success: true })
       expect(mockLeadCreate).toHaveBeenCalledTimes(1)
-      // Aguarda a promise de envio de e-mail (que é fire-and-forget com .catch)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      // deixa microtasks pendentes resolverem
+      await Promise.resolve()
+      await Promise.resolve()
       expect(mockEmailsSend).toHaveBeenCalledTimes(1)
     })
 
     it('deve incluir nome e tipo do lead no corpo do e-mail', async () => {
-      await submitLead(payloadVarejo)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      const promise = submitLead(payloadVarejo)
+      jest.runAllTimersAsync()
+      await promise
+      await Promise.resolve()
+      await Promise.resolve()
 
       expect(mockEmailsSend).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -108,8 +141,11 @@ describe('submitLead', () => {
     })
 
     it('deve enviar e-mail para contactEmail configurado', async () => {
-      await submitLead(payloadVarejo)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      const promise = submitLead(payloadVarejo)
+      jest.runAllTimersAsync()
+      await promise
+      await Promise.resolve()
+      await Promise.resolve()
 
       expect(mockEmailsSend).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -119,8 +155,6 @@ describe('submitLead', () => {
     })
 
     it('deve incluir empresa e CNPJ no corpo para lead atacado', async () => {
-      // Usa payload com CNPJ válido do mock (schema pode rejeitar CNPJ inválido)
-      // Vamos usar diretamente um CNPJ com dígitos corretos
       const atacadoPayload = {
         type: 'atacado' as const,
         name: 'Maria Empresa',
@@ -130,8 +164,11 @@ describe('submitLead', () => {
         cnpj: '11.444.777/0001-61',
       }
 
-      await submitLead(atacadoPayload)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      const promise = submitLead(atacadoPayload)
+      jest.runAllTimersAsync()
+      await promise
+      await Promise.resolve()
+      await Promise.resolve()
 
       if (mockEmailsSend.mock.calls.length > 0) {
         expect(mockEmailsSend).toHaveBeenCalledWith(
@@ -151,7 +188,8 @@ describe('submitLead', () => {
 
       expect(result).toEqual({ success: true })
       expect(mockLeadCreate).toHaveBeenCalledTimes(1)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      jest.runAllTimers()
+      await Promise.resolve()
       expect(mockEmailsSend).not.toHaveBeenCalled()
     })
 
@@ -167,18 +205,27 @@ describe('submitLead', () => {
       mockEmailsSend.mockRejectedValue(new Error('Resend API error'))
     })
 
-    it('deve retornar { success: true } (falha silenciosa)', async () => {
-      const result = await submitLead(payloadVarejo)
+    it('deve retornar { success: true } (falha silenciosa após 3 tentativas)', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const promise = submitLead(payloadVarejo)
+      jest.runAllTimersAsync()
+      const result = await promise
 
       expect(result).toEqual({ success: true })
       expect(mockLeadCreate).toHaveBeenCalledTimes(1)
+      consoleErrorSpy.mockRestore()
     })
 
     it('lead deve estar criado no banco mesmo com erro de e-mail', async () => {
-      await submitLead(payloadVarejo)
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const promise = submitLead(payloadVarejo)
+      jest.runAllTimersAsync()
+      await promise
+
       expect(mockLeadCreate).toHaveBeenCalledWith(
         expect.objectContaining({ data: expect.objectContaining({ name: payloadVarejo.name }) })
       )
+      consoleErrorSpy.mockRestore()
     })
   })
 
@@ -189,9 +236,11 @@ describe('submitLead', () => {
     })
 
     it('NÃO deve chamar resend.emails.send', async () => {
-      await submitLead(payloadVarejo)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      const result = await submitLead(payloadVarejo)
+      jest.runAllTimers()
+      await Promise.resolve()
       expect(mockEmailsSend).not.toHaveBeenCalled()
+      expect(result).toEqual({ success: true })
     })
   })
 
@@ -202,9 +251,11 @@ describe('submitLead', () => {
     })
 
     it('NÃO deve chamar resend.emails.send', async () => {
-      await submitLead(payloadVarejo)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      const result = await submitLead(payloadVarejo)
+      jest.runAllTimers()
+      await Promise.resolve()
       expect(mockEmailsSend).not.toHaveBeenCalled()
+      expect(result).toEqual({ success: true })
     })
   })
 
@@ -215,9 +266,11 @@ describe('submitLead', () => {
     })
 
     it('NÃO deve chamar resend.emails.send', async () => {
-      await submitLead(payloadVarejo)
-      await new Promise(resolve => setTimeout(resolve, 0))
+      const result = await submitLead(payloadVarejo)
+      jest.runAllTimers()
+      await Promise.resolve()
       expect(mockEmailsSend).not.toHaveBeenCalled()
+      expect(result).toEqual({ success: true })
     })
   })
 
@@ -239,13 +292,15 @@ describe('submitLead', () => {
     beforeEach(() => setupEnvKey('re_test_key'))
 
     it('lead é criado no banco e e-mail é enviado via mock', async () => {
-      const result = await submitLead(payloadVarejo)
+      const promise = submitLead(payloadVarejo)
+      jest.runAllTimersAsync()
+      const result = await promise
 
       expect(result).toEqual({ success: true })
       expect(mockLeadCreate).toHaveBeenCalledTimes(1)
 
-      // Aguarda promise assíncrona de envio
-      await new Promise(resolve => setTimeout(resolve, 10))
+      await Promise.resolve()
+      await Promise.resolve()
       expect(mockEmailsSend).toHaveBeenCalledTimes(1)
       expect(mockEmailsSend).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -255,5 +310,147 @@ describe('submitLead', () => {
         })
       )
     })
+  })
+})
+
+// =============================================================================
+// Testes específicos do helper sendEmailWithRetry (via submitLead — comportamento observável)
+// =============================================================================
+
+describe('sendEmailWithRetry — comportamento de retry via submitLead', () => {
+  beforeEach(() => {
+    setupEnvKey('re_test_key')
+    mockLeadCreate.mockResolvedValue({ id: 'lead-retry-test', ...payloadVarejo })
+    mockSiteConfigFindUnique.mockResolvedValue({ id: 'singleton', contactEmail: 'contato@technicfix.com.br' })
+  })
+
+  it('sucesso na 1ª tentativa: não retenta, nenhum log de retry emitido', async () => {
+    mockEmailsSend.mockResolvedValue({ data: { id: 'email-ok' }, error: null })
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    const promise = submitLead(payloadVarejo)
+    jest.runAllTimersAsync()
+    await promise
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(mockEmailsSend).toHaveBeenCalledTimes(1)
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'resend_retry' })
+    )
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'resend_exhausted' })
+    )
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('falha nas 3 tentativas: emite resend_retry nas tentativas 1 e 2, resend_exhausted na 3', async () => {
+    const error = new Error('Resend API error')
+    mockEmailsSend.mockRejectedValue(error)
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    const promise = submitLead(payloadVarejo)
+    // Roda submitLead até o fire-and-forget
+    await Promise.resolve()
+    // Roda os timers (delays 1000ms, 2000ms) e resolução de promises
+    jest.runAllTimersAsync()
+    await promise
+
+    // Deixa o fire-and-forget completar todas as iterações
+    // Precisamos ceder controle várias vezes para que o loop async complete
+    for (let i = 0; i < 10; i++) {
+      await Promise.resolve()
+      jest.runAllTimers()
+    }
+
+    // Verifica que houve 3 tentativas
+    expect(mockEmailsSend).toHaveBeenCalledTimes(3)
+
+    // Logs de retry para tentativas 1 e 2
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'resend_retry', attempt: 1, leadId: 'lead-retry-test' })
+    )
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'resend_retry', attempt: 2, leadId: 'lead-retry-test' })
+    )
+
+    // Log exhausted na tentativa 3
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'resend_exhausted', leadId: 'lead-retry-test' })
+    )
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('falha nas 2 primeiras tentativas, sucesso na 3ª: sem log resend_exhausted', async () => {
+    mockEmailsSend
+      .mockRejectedValueOnce(new Error('falha 1'))
+      .mockRejectedValueOnce(new Error('falha 2'))
+      .mockResolvedValueOnce({ data: { id: 'email-ok' }, error: null })
+
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    const promise = submitLead(payloadVarejo)
+    await Promise.resolve()
+    jest.runAllTimersAsync()
+    await promise
+
+    for (let i = 0; i < 10; i++) {
+      await Promise.resolve()
+      jest.runAllTimers()
+    }
+
+    expect(mockEmailsSend).toHaveBeenCalledTimes(3)
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'resend_exhausted' })
+    )
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('delays entre tentativas: mock de setTimeout confirma delays de 1000ms e 2000ms', async () => {
+    const error = new Error('Resend API error')
+    mockEmailsSend.mockRejectedValue(error)
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const setTimeoutSpy = jest.spyOn(global, 'setTimeout')
+
+    const promise = submitLead(payloadVarejo)
+    await Promise.resolve()
+    jest.runAllTimersAsync()
+    await promise
+
+    for (let i = 0; i < 10; i++) {
+      await Promise.resolve()
+      jest.runAllTimers()
+    }
+
+    // Verifica delays: setTimeout foi chamado com 1000ms (attempt 1) e 2000ms (attempt 2)
+    const timerCalls = setTimeoutSpy.mock.calls.map(call => call[1])
+    expect(timerCalls).toContain(1000)
+    expect(timerCalls).toContain(2000)
+
+    consoleErrorSpy.mockRestore()
+    setTimeoutSpy.mockRestore()
+  })
+
+  it('submitLead persiste o lead no banco mesmo quando todas as 3 tentativas de email falham', async () => {
+    mockEmailsSend.mockRejectedValue(new Error('Resend completamente inoperante'))
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    const promise = submitLead(payloadVarejo)
+    await Promise.resolve()
+    jest.runAllTimersAsync()
+    const result = await promise
+
+    for (let i = 0; i < 10; i++) {
+      await Promise.resolve()
+      jest.runAllTimers()
+    }
+
+    // Lead salvo
+    expect(result).toEqual({ success: true })
+    expect(mockLeadCreate).toHaveBeenCalledTimes(1)
+    // Email tentado 3 vezes
+    expect(mockEmailsSend).toHaveBeenCalledTimes(3)
+
+    consoleErrorSpy.mockRestore()
   })
 })

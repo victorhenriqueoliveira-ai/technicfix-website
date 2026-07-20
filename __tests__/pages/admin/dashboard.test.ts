@@ -5,6 +5,7 @@
 const mockProductCount = jest.fn()
 const mockCategoryCount = jest.fn()
 const mockLeadCount = jest.fn()
+const mockLeadGroupBy = jest.fn()
 const mockSaleAggregate = jest.fn()
 const mockGetSalesSummary = jest.fn()
 const mockGetTopProducts = jest.fn()
@@ -13,7 +14,10 @@ jest.mock('@/lib/prisma', () => ({
   db: {
     product: { count: () => mockProductCount() },
     category: { count: () => mockCategoryCount() },
-    lead: { count: ({ where }: { where: { status: string } }) => mockLeadCount(where) },
+    lead: {
+      count: ({ where }: { where: { status: string } }) => mockLeadCount(where),
+      groupBy: (args: unknown) => mockLeadGroupBy(args),
+    },
     sale: { aggregate: (args: unknown) => mockSaleAggregate(args) },
   },
 }))
@@ -26,6 +30,11 @@ jest.mock('@/actions/sales', () => ({
 // Mock do DashboardCharts (Client Component — não precisa renderizar nos testes de integração)
 jest.mock('@/components/admin/DashboardCharts', () => ({
   DashboardCharts: () => null,
+}))
+
+// Mock do DashboardLeadsCharts (Client Component — não precisa renderizar nos testes de integração)
+jest.mock('@/components/admin/DashboardLeadsCharts', () => ({
+  DashboardLeadsCharts: () => null,
 }))
 
 // Mock lucide-react icons usados no dashboard
@@ -44,12 +53,18 @@ describe('Dashboard admin — integração de módulos', () => {
     jest.clearAllMocks()
     jest.resetModules()
 
+    // Valor padrão para groupBy de leads (retorna array vazio)
+    mockLeadGroupBy.mockResolvedValue([])
+
     // Re-registrar mocks após resetModules
     jest.mock('@/lib/prisma', () => ({
       db: {
         product: { count: () => mockProductCount() },
         category: { count: () => mockCategoryCount() },
-        lead: { count: ({ where }: { where: { status: string } }) => mockLeadCount(where) },
+        lead: {
+          count: ({ where }: { where: { status: string } }) => mockLeadCount(where),
+          groupBy: (args: unknown) => mockLeadGroupBy(args),
+        },
         sale: { aggregate: (args: unknown) => mockSaleAggregate(args) },
       },
     }))
@@ -59,6 +74,9 @@ describe('Dashboard admin — integração de módulos', () => {
     }))
     jest.mock('@/components/admin/DashboardCharts', () => ({
       DashboardCharts: () => null,
+    }))
+    jest.mock('@/components/admin/DashboardLeadsCharts', () => ({
+      DashboardLeadsCharts: () => null,
     }))
     jest.mock('lucide-react', () => ({
       Package: () => null,
@@ -75,6 +93,7 @@ describe('Dashboard admin — integração de módulos', () => {
     mockProductCount.mockResolvedValue(0)
     mockCategoryCount.mockResolvedValue(0)
     mockLeadCount.mockResolvedValue(0)
+    mockLeadGroupBy.mockResolvedValue([])
     mockSaleAggregate.mockResolvedValue({ _count: 0 })
     mockGetSalesSummary.mockResolvedValue([])
     mockGetTopProducts.mockResolvedValue([])
@@ -87,6 +106,7 @@ describe('Dashboard admin — integração de módulos', () => {
     mockProductCount.mockResolvedValue(10)
     mockCategoryCount.mockResolvedValue(5)
     mockLeadCount.mockResolvedValue(3)
+    mockLeadGroupBy.mockResolvedValue([])
     mockSaleAggregate.mockResolvedValue({ _count: 7 })
     mockGetSalesSummary.mockResolvedValue([])
     mockGetTopProducts.mockResolvedValue([])
@@ -100,6 +120,7 @@ describe('Dashboard admin — integração de módulos', () => {
     mockProductCount.mockResolvedValue(0)
     mockCategoryCount.mockResolvedValue(0)
     mockLeadCount.mockResolvedValue(0)
+    mockLeadGroupBy.mockResolvedValue([])
     mockSaleAggregate.mockResolvedValue({ _count: 0 })
     mockGetSalesSummary.mockResolvedValue([])
     mockGetTopProducts.mockResolvedValue([])
@@ -118,6 +139,7 @@ describe('Dashboard admin — integração de módulos', () => {
     mockProductCount.mockResolvedValue(1)
     mockCategoryCount.mockResolvedValue(1)
     mockLeadCount.mockResolvedValue(1)
+    mockLeadGroupBy.mockResolvedValue([])
     mockSaleAggregate.mockResolvedValue({ _count: 1 })
     mockGetSalesSummary.mockResolvedValue(salesByDay)
     mockGetTopProducts.mockResolvedValue(topProducts)
@@ -127,5 +149,21 @@ describe('Dashboard admin — integração de módulos', () => {
     expect(result).not.toBeNull()
     expect(mockGetSalesSummary).toHaveBeenCalledWith({ period: '30d' })
     expect(mockGetTopProducts).toHaveBeenCalledWith({ period: '30d', limit: 5 })
+  })
+
+  it('dashboard chama db.lead.groupBy 3 vezes para dados de leads', async () => {
+    mockProductCount.mockResolvedValue(5)
+    mockCategoryCount.mockResolvedValue(2)
+    mockLeadCount.mockResolvedValue(1)
+    mockLeadGroupBy.mockResolvedValue([])
+    mockSaleAggregate.mockResolvedValue({ _count: 3 })
+    mockGetSalesSummary.mockResolvedValue([])
+    mockGetTopProducts.mockResolvedValue([])
+
+    const { default: DashboardPage } = await import('@/app/(admin)/admin/page')
+    await DashboardPage()
+
+    // 3 chamadas: volume diário, composição por tipo, funil de conversão
+    expect(mockLeadGroupBy).toHaveBeenCalledTimes(3)
   })
 })

@@ -70,8 +70,7 @@ export function Hero({ banners }: HeroProps) {
   return (
     <section
       aria-label="Banner principal"
-      className="relative w-full overflow-hidden"
-      style={{ height: '650px' }}
+      className="relative w-full overflow-hidden h-[650px]"
       data-testid="hero-section"
       onMouseEnter={stopAutoRotation}
       onMouseLeave={startAutoRotation}

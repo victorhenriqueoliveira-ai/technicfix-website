@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ProductSummary } from '@/lib/types'
+import { shimmerDataURL } from '@/lib/utils/image'
 
 interface HomepageProductCardProps {
   product: ProductSummary
@@ -35,12 +36,14 @@ export function HomepageProductCard({ product, whatsappNumber }: HomepageProduct
       className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden flex flex-col"
     >
       {/* Área de imagem */}
-      <div className="relative aspect-square bg-gray-50">
+      <div className="relative aspect-square bg-gray-200">
         {imageSrc ? (
           <Image
             src={imageSrc}
             alt={product.name}
             fill
+            placeholder="blur"
+            blurDataURL={shimmerDataURL}
             className="object-contain p-2"
             loading="lazy"
           />

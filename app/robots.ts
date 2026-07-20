@@ -1,10 +1,11 @@
 import { MetadataRoute } from 'next'
+import { env } from '@/lib/env'
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       { userAgent: '*', allow: '/', disallow: '/admin' },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://technicfix.com.br'}/sitemap.xml`,
+    sitemap: `${env.NEXT_PUBLIC_SITE_URL}/sitemap.xml`,
   }
 }

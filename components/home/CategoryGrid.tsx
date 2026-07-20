@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { isValidUrl } from '@/lib/utils/image'
+import { isValidUrl, shimmerDataURL } from '@/lib/utils/image'
 
 export interface CategoryData {
   id: string
@@ -38,12 +38,14 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
               className="group block rounded-2xl overflow-hidden border-2 border-transparent bg-gray-50 hover:border-brand-amber hover:shadow-lg hover:shadow-brand-amber/10 transition-all duration-200"
               data-testid={`category-card-${category.slug}`}
             >
-              <div className="relative w-full aspect-square bg-gray-100">
+              <div className="relative w-full aspect-square bg-gray-200">
                 {isValidUrl(category.imageUrl) ? (
                   <Image
                     src={category.imageUrl!}
                     alt={category.name}
                     fill
+                    placeholder="blur"
+                    blurDataURL={shimmerDataURL}
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 ) : (

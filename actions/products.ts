@@ -2,10 +2,9 @@
 
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { db } from '@/lib/prisma'
 import { slugify } from '@/lib/utils/slugify'
+import { env } from '@/lib/env'
 
 // ─── Schema de validação ──────────────────────────────────────────────────────
 
@@ -60,6 +59,7 @@ function revalidateAll() {
   revalidatePath('/admin/produtos')
   revalidatePath('/')
   revalidatePath('/produtos')
+  revalidatePath('/categorias/[slug]', 'page')
 }
 
 // ─── createProduct ────────────────────────────────────────────────────────────
@@ -168,11 +168,12 @@ export async function deleteProduct(id: string): Promise<ProductActionResult> {
     return { success: false, error: 'Produto não encontrado.' }
   }
 
-  // Desvincular leads antes de excluir
   await db.lead.updateMany({
     where: { productId: id },
     data: { productId: null },
   })
+
+  await db.sale.deleteMany({ where: { productId: id } })
 
   await db.product.delete({ where: { id } })
 
@@ -180,43 +181,3 @@ export async function deleteProduct(id: string): Promise<ProductActionResult> {
   return { success: true, id }
 }
 
-// ─── getPresignedUploadUrl ────────────────────────────────────────────────────
-
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
-const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5MB
-
-export async function getPresignedUploadUrl(
-  filename: string,
-  contentType: string,
-  sizeBytes?: number
-): Promise<{ url: string; key: string } | { error: string }> {
-  if (!ALLOWED_TYPES.includes(contentType)) {
-    return { error: 'Tipo de arquivo não permitido. Use JPEG, PNG ou WebP.' }
-  }
-
-  if (sizeBytes !== undefined && sizeBytes > MAX_SIZE_BYTES) {
-    return { error: 'Arquivo muito grande. Tamanho máximo: 5MB.' }
-  }
-
-  const s3 = new S3Client({
-    region: 'auto',
-    endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-    },
-  })
-
-  const key = `products/${Date.now()}-${filename}`
-  const url = await getSignedUrl(
-    s3,
-    new PutObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME!,
-      Key: key,
-      ContentType: contentType,
-    }),
-    { expiresIn: 300 }
-  )
-
-  return { url, key }
-}

@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@base-ui/react/Slider": ["./node_modules/@base-ui/react/slider/index.d.mts"]
     }
   },
   "include": [
