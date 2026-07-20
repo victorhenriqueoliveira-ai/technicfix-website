@@ -33,57 +33,60 @@ export function MobileMenu({ categories, products }: MobileMenuProps) {
         </SheetTrigger>
 
         <SheetContent side="right" className="bg-white w-72 p-0 flex flex-col gap-0">
-          {/* Cabeçalho do drawer */}
-          <div className="flex items-center px-4 py-3 border-b border-gray-100">
+          {/* Cabeçalho do drawer — fixo no topo */}
+          <div className="flex items-center px-4 py-3 border-b border-gray-100 shrink-0">
             <span className="text-sm font-semibold text-gray-900">Menu</span>
           </div>
 
-          {/* Busca — fecha o Sheet ao confirmar */}
-          <div className="px-4 py-3 border-b border-gray-100">
+          {/* Busca — fixa abaixo do cabeçalho */}
+          <div className="px-4 py-3 border-b border-gray-100 shrink-0">
             <HeaderSearchBar
               className="w-full"
               onSearch={() => setOpen(false)}
             />
           </div>
 
-          {/* Categorias */}
-          <div className="border-b border-gray-100 px-2 py-2">
-            <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Categorias
-            </p>
-            <CategoryAccordion categories={categories} variant="light" />
-          </div>
+          {/* Área scrollável — categorias + produtos */}
+          <div className="flex-1 overflow-y-auto">
+            {/* Categorias */}
+            <div className="border-b border-gray-100 px-2 py-2">
+              <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                Categorias
+              </p>
+              <CategoryAccordion categories={categories} variant="light" />
+            </div>
 
-          {/* Produtos — accordion nativo <details>/<summary> */}
-          <div className="border-b border-gray-100 px-2 py-2" data-testid="products-accordion">
-            <details>
-              <summary className="flex cursor-pointer list-none items-center justify-between px-2 py-2.5 text-sm font-medium text-gray-700 hover:text-brand-amber border-b border-gray-100">
-                <span>Produtos</span>
-                <span className="ml-2 text-gray-400 group-open:rotate-180 transition-transform">▾</span>
-              </summary>
+            {/* Produtos — accordion nativo <details>/<summary> */}
+            <div className="px-2 py-2" data-testid="products-accordion">
+              <details>
+                <summary className="flex cursor-pointer list-none items-center justify-between px-2 py-2.5 text-sm font-medium text-gray-700 hover:text-brand-amber">
+                  <span>Produtos</span>
+                  <span className="ml-2 text-gray-400 transition-transform">▾</span>
+                </summary>
 
-              <div className="ml-3 flex flex-col pb-1">
-                {products.map((product) => (
+                <div className="ml-3 flex flex-col pb-1">
+                  {products.map((product) => (
+                    <Link
+                      key={product.slug}
+                      href={`/produtos/${product.slug}`}
+                      className="block px-2 py-1.5 text-sm text-gray-500 hover:text-brand-amber"
+                      onClick={() => setOpen(false)}
+                      data-testid={`product-link-${product.slug}`}
+                    >
+                      {product.name}
+                    </Link>
+                  ))}
                   <Link
-                    key={product.slug}
-                    href={`/produtos/${product.slug}`}
-                    className="block px-2 py-1.5 text-sm text-gray-500 hover:text-brand-amber"
+                    href="/produtos"
+                    className="block px-2 py-2 text-sm font-medium text-brand-amber hover:underline"
                     onClick={() => setOpen(false)}
-                    data-testid={`product-link-${product.slug}`}
+                    data-testid="ver-todos-produtos"
                   >
-                    {product.name}
+                    Ver todos os produtos
                   </Link>
-                ))}
-                <Link
-                  href="/produtos"
-                  className="block px-2 py-2 text-sm font-medium text-brand-amber hover:underline"
-                  onClick={() => setOpen(false)}
-                  data-testid="ver-todos-produtos"
-                >
-                  Ver todos os produtos
-                </Link>
-              </div>
-            </details>
+                </div>
+              </details>
+            </div>
           </div>
         </SheetContent>
       </Sheet>
