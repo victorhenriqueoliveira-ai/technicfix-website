@@ -78,7 +78,7 @@ export function HomepageProductCard({ product, whatsappNumber }: HomepageProduct
             className="flex items-center justify-center gap-1.5 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold py-2 px-3 transition-colors"
           >
             <WhatsAppIcon className="w-4 h-4" />
-            Falar pelo WhatsApp
+              Consultar
           </a>
 
           <Link
