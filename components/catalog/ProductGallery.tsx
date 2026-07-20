@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { isValidUrl } from '@/lib/utils/image'
+import { isValidUrl, shimmerDataURL } from '@/lib/utils/image'
 import { ProductImagePlaceholder } from '@/components/ui/ProductImagePlaceholder'
 
 interface ProductGalleryProps {
@@ -30,11 +30,13 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Imagem principal */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-200 animate-pulse">
         <Image
           src={validImages[activeIndex]}
           alt={`${productName} — imagem ${activeIndex + 1}`}
           fill
+          placeholder="blur"
+          blurDataURL={shimmerDataURL}
           className="object-cover"
           data-testid="gallery-main-image"
         />
@@ -62,6 +64,8 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 src={src}
                 alt={`${productName} — miniatura ${idx + 1}`}
                 fill
+                placeholder="blur"
+                blurDataURL={shimmerDataURL}
                 className="object-cover"
               />
             </button>
