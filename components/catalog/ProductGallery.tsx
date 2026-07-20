@@ -12,6 +12,7 @@ interface ProductGalleryProps {
 
 export function ProductGallery({ images, productName }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [mainLoaded, setMainLoaded] = useState(false)
 
   // Filtra apenas URLs válidas
   const validImages = images.filter(isValidUrl)
@@ -30,13 +31,14 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Imagem principal */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-200 animate-pulse">
+      <div className={`relative aspect-square w-full overflow-hidden rounded-lg bg-gray-200 ${!mainLoaded ? 'animate-pulse' : ''}`}>
         <Image
           src={validImages[activeIndex]}
           alt={`${productName} — imagem ${activeIndex + 1}`}
           fill
           placeholder="blur"
           blurDataURL={shimmerDataURL}
+          onLoad={() => setMainLoaded(true)}
           className="object-cover"
           data-testid="gallery-main-image"
         />
@@ -50,7 +52,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               key={idx}
               type="button"
               role="listitem"
-              onClick={() => setActiveIndex(idx)}
+              onClick={() => { setActiveIndex(idx); setMainLoaded(false) }}
               className={`relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
                 idx === activeIndex
                   ? 'border-brand-amber'

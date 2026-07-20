@@ -36,7 +36,7 @@ export function HomepageProductCard({ product, whatsappNumber }: HomepageProduct
       className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden flex flex-col"
     >
       {/* Área de imagem */}
-      <div className="relative aspect-square bg-gray-200 animate-pulse">
+      <div className="relative aspect-square bg-gray-200">
         {imageSrc ? (
           <Image
             src={imageSrc}

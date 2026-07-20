@@ -38,7 +38,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
               className="group block rounded-2xl overflow-hidden border-2 border-transparent bg-gray-50 hover:border-brand-amber hover:shadow-lg hover:shadow-brand-amber/10 transition-all duration-200"
               data-testid={`category-card-${category.slug}`}
             >
-              <div className="relative w-full aspect-square bg-gray-200 animate-pulse">
+              <div className="relative w-full aspect-square bg-gray-200">
                 {isValidUrl(category.imageUrl) ? (
                   <Image
                     src={category.imageUrl!}
