@@ -17,65 +17,59 @@ export function CategoryNav({ categories }: CategoryNavProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   return (
-    <>
-      {/* Desktop: nav horizontal com mega-dropdown */}
-      <div className="bg-brand-navy hidden md:block">
-        <nav
-          className="mx-auto flex max-w-7xl items-center px-4 sm:px-6 lg:px-8"
-          aria-label="Categorias de produtos"
-        >
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              className="relative"
-              onMouseEnter={() => setHoveredId(cat.id)}
-              onMouseLeave={() => setHoveredId(null)}
-            >
-              {cat.children.length > 0 ? (
-                <button
-                  className="flex items-center gap-1.5 text-white text-sm font-medium px-3 py-2 hover:bg-white/10 focus:outline-none"
-                  aria-expanded={hoveredId === cat.id}
-                  aria-haspopup="true"
-                >
-                  <CategoryIcon category={cat} />
-                  {cat.name}
-                </button>
-              ) : (
-                <Link
-                  href={`/produtos?categoria=${cat.slug}`}
-                  className="flex items-center gap-1.5 text-white text-sm font-medium px-3 py-2 hover:bg-white/10"
-                >
-                  <CategoryIcon category={cat} />
-                  {cat.name}
-                </Link>
-              )}
+    /* Desktop: nav horizontal com mega-dropdown */
+    <div className="bg-brand-navy hidden md:block">
+      <nav
+        className="mx-auto flex max-w-7xl items-center px-4 sm:px-6 lg:px-8"
+        aria-label="Categorias de produtos"
+      >
+        {categories.map((cat) => (
+          <div
+            key={cat.id}
+            className="relative"
+            onMouseEnter={() => setHoveredId(cat.id)}
+            onMouseLeave={() => setHoveredId(null)}
+          >
+            {cat.children.length > 0 ? (
+              <button
+                className="flex items-center gap-1.5 text-white text-sm font-medium px-3 py-2 hover:bg-white/10 focus:outline-none"
+                aria-expanded={hoveredId === cat.id}
+                aria-haspopup="true"
+              >
+                <CategoryIcon category={cat} />
+                {cat.name}
+              </button>
+            ) : (
+              <Link
+                href={`/produtos?categoria=${cat.slug}`}
+                className="flex items-center gap-1.5 text-white text-sm font-medium px-3 py-2 hover:bg-white/10"
+              >
+                <CategoryIcon category={cat} />
+                {cat.name}
+              </Link>
+            )}
 
-              {/* Mega-dropdown */}
-              {hoveredId === cat.id && cat.children.length > 0 && (
-                <div
-                  className="absolute top-full left-0 bg-white shadow-xl rounded-b-lg z-50 min-w-[180px] py-2"
-                  role="menu"
-                >
-                  {cat.children.map((child) => (
-                    <Link
-                      key={child.id}
-                      href={`/produtos?categoria=${child.slug}`}
-                      className="block px-4 py-1.5 text-sm text-brand-navy hover:bg-gray-50 hover:text-brand-amber"
-                      role="menuitem"
-                    >
-                      {child.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </nav>
-      </div>
-
-      {/* Mobile: acordeão de categorias (para uso no Sheet do Header) */}
-      <CategoryAccordion categories={categories} />
-    </>
+            {hoveredId === cat.id && cat.children.length > 0 && (
+              <div
+                className="absolute top-full left-0 bg-white shadow-xl rounded-b-lg z-50 min-w-[180px] py-2"
+                role="menu"
+              >
+                {cat.children.map((child) => (
+                  <Link
+                    key={child.id}
+                    href={`/categorias/${child.slug}`}
+                    className="block px-4 py-1.5 text-sm text-brand-navy hover:bg-gray-50 hover:text-brand-amber"
+                    role="menuitem"
+                  >
+                    {child.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+    </div>
   )
 }
 
