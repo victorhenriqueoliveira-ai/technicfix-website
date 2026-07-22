@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { submitLead } from '@/actions/leads'
 import { varejoSchema, atacadoSchema } from '@/lib/validations/lead'
+import { maskPhone, maskCNPJ } from '@/lib/utils/masks'
 
 type LeadType = 'varejo' | 'atacado'
 
@@ -251,10 +252,11 @@ export function LeadFormInline({
                     id="lead-telefone"
                     type="tel"
                     value={telefone}
-                    onChange={(e) => setTelefone(e.target.value)}
+                    onChange={(e) => setTelefone(maskPhone(e.target.value))}
                     data-testid="lead-input-telefone"
                     className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
                     autoComplete="tel"
+                    maxLength={15}
                   />
                   {errors.phone && (
                     <p className="mt-1 text-xs text-red-600" role="alert">
@@ -294,9 +296,10 @@ export function LeadFormInline({
                         id="lead-cnpj"
                         type="text"
                         value={cnpj}
-                        onChange={(e) => setCnpj(e.target.value)}
+                        onChange={(e) => setCnpj(maskCNPJ(e.target.value))}
                         data-testid="lead-input-cnpj"
                         placeholder="00.000.000/0000-00"
+                        maxLength={18}
                         className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-navy focus:outline-none focus:ring-1 focus:ring-brand-navy"
                       />
                       {errors.cnpj && (

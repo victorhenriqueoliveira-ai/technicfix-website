@@ -47,7 +47,29 @@ export async function Header() {
           </div>
 
           {/* Dropdown de produtos — desktop only */}
-          <ProductsDropdown products={products} />
+          {/* <ProductsDropdown products={products} /> */}
+          <div className='hidden md:flex items-center gap-1'>
+            <Link
+              href="/produtos"
+              className="shrink-0 flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-navy/5 hover:text-brand-amber-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-amber"
+            >
+              Produtos
+            </Link>
+
+            <Link
+              href="/contato"
+              className="shrink-0 flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-navy/5 hover:text-brand-amber-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-amber"
+            >
+              Contato
+            </Link>
+
+            <Link
+              href="/technocalhas"
+              className="shrink-0 flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-navy/5 hover:text-brand-amber-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-amber"
+            >
+              Parceira Technocalhas
+            </Link>
+          </div>
 
           {/* WhatsApp CTA — desktop only */}
           <a

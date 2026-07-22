@@ -33,7 +33,7 @@ export function HomepageProductCard({ product, whatsappNumber }: HomepageProduct
   return (
     <div
       data-testid={`homepage-product-card-${product.slug}`}
-      className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden flex flex-col"
+      className="relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden flex flex-col"
     >
       {/* Área de imagem */}
       <div className="relative aspect-square bg-gray-200">
@@ -75,7 +75,7 @@ export function HomepageProductCard({ product, whatsappNumber }: HomepageProduct
             target="_blank"
             rel="noopener"
             aria-label={`Falar pelo WhatsApp sobre ${product.name}`}
-            className="flex items-center justify-center gap-1.5 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold py-2 px-3 transition-colors"
+            className="relative z-10 flex items-center justify-center gap-1.5 rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold py-2 px-3 transition-colors"
           >
             <WhatsAppIcon className="w-4 h-4" />
               Consultar
@@ -83,7 +83,7 @@ export function HomepageProductCard({ product, whatsappNumber }: HomepageProduct
 
           <Link
             href={`/produtos/${product.slug}`}
-            className="text-center text-xs text-brand-amber hover:underline"
+            className="text-center text-xs text-brand-amber hover:underline after:absolute after:inset-0"
           >
             Ver detalhes
           </Link>

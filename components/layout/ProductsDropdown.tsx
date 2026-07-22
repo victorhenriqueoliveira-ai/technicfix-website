@@ -24,7 +24,7 @@ export function ProductsDropdown({ products }: ProductsDropdownProps) {
       data-testid="products-dropdown-root"
     >
       <button
-        className="flex items-center gap-1 text-sm font-medium px-3 py-2 hover:bg-white/10 text-white focus:outline-none"
+        className="flex items-center gap-1 text-sm font-medium px-3 py-2 hover:bg-white/10 text-primary focus:outline-none"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >

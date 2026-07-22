@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { submitLead } from '@/actions/leads'
+import { maskPhone } from '@/lib/utils/masks'
 import {
   Dialog,
   DialogContent,
@@ -27,14 +28,15 @@ export function LeadVarejoModal({
 }: LeadVarejoModalProps) {
   const [formState, setFormState] = useState<FormState>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [phoneValue, setPhoneValue] = useState('')
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
       onClose()
-      // Resetar estado ao fechar
       setTimeout(() => {
         setFormState('idle')
         setErrorMessage('')
+        setPhoneValue('')
       }, 200)
     }
   }
@@ -60,6 +62,7 @@ export function LeadVarejoModal({
       if (result.success) {
         setFormState('success')
         form.reset()
+        setPhoneValue('')
       } else {
         setFormState('error')
         setErrorMessage(result.error ?? 'Ocorreu um erro. Tente novamente.')
@@ -142,6 +145,9 @@ export function LeadVarejoModal({
                 type="tel"
                 required
                 placeholder="(11) 99999-9999"
+                value={phoneValue}
+                onChange={(e) => setPhoneValue(maskPhone(e.target.value))}
+                maxLength={15}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>

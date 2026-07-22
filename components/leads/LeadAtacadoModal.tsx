@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { submitLead } from '@/actions/leads'
+import { maskPhone, maskCNPJ } from '@/lib/utils/masks'
 import {
   Dialog,
   DialogContent,
@@ -19,18 +20,6 @@ interface LeadAtacadoModalProps {
 
 type FormState = 'idle' | 'loading' | 'success' | 'error'
 
-/**
- * Aplica máscara de CNPJ no formato XX.XXX.XXX/XXXX-XX
- */
-function aplicarMascaraCNPJ(value: string): string {
-  const digits = value.replace(/\D/g, '').slice(0, 14)
-  return digits
-    .replace(/^(\d{2})(\d)/, '$1.$2')
-    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-    .replace(/\.(\d{3})(\d)/, '.$1/$2')
-    .replace(/(\d{4})(\d)/, '$1-$2')
-}
-
 export function LeadAtacadoModal({
   productId,
   productName,
@@ -39,22 +28,19 @@ export function LeadAtacadoModal({
 }: LeadAtacadoModalProps) {
   const [formState, setFormState] = useState<FormState>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const [cnpjValue, setCnpjValue] = useState<string>('')
+  const [phoneValue, setPhoneValue] = useState('')
+  const [cnpjValue, setCnpjValue] = useState('')
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
       onClose()
-      // Resetar estado ao fechar
       setTimeout(() => {
         setFormState('idle')
         setErrorMessage('')
+        setPhoneValue('')
         setCnpjValue('')
       }, 200)
     }
-  }
-
-  function handleCnpjChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setCnpjValue(aplicarMascaraCNPJ(e.target.value))
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -82,6 +68,7 @@ export function LeadAtacadoModal({
       if (result.success) {
         setFormState('success')
         form.reset()
+        setPhoneValue('')
         setCnpjValue('')
       } else {
         setFormState('error')
@@ -182,6 +169,9 @@ export function LeadAtacadoModal({
                 type="tel"
                 required
                 placeholder="(11) 99999-9999"
+                value={phoneValue}
+                onChange={(e) => setPhoneValue(maskPhone(e.target.value))}
+                maxLength={15}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
               />
             </div>
@@ -217,7 +207,7 @@ export function LeadAtacadoModal({
                 required
                 placeholder="00.000.000/0001-00"
                 value={cnpjValue}
-                onChange={handleCnpjChange}
+                onChange={(e) => setCnpjValue(maskCNPJ(e.target.value))}
                 maxLength={18}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
                 data-testid="cnpj-input"

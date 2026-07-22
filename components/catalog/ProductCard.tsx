@@ -22,9 +22,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <article className="group flex flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-sm transition-all duration-200 hover:border-brand-amber hover:shadow-lg hover:shadow-brand-amber/10">
+      <article className="group relative flex flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-sm transition-all duration-200 hover:border-brand-amber hover:shadow-lg hover:shadow-brand-amber/10">
         {/* Imagem */}
-        <Link href={`/produtos/${product.slug}`} className={`relative block aspect-square overflow-hidden bg-gray-200 ${!imgLoaded ? 'animate-pulse' : ''}`}>
+        <div className={`relative block aspect-square overflow-hidden bg-gray-200 ${!imgLoaded ? 'animate-pulse' : ''}`}>
           {imageSrc ? (
             <Image
               src={imageSrc}
@@ -38,21 +38,24 @@ export function ProductCard({ product }: ProductCardProps) {
           ) : (
             <ProductImagePlaceholder label={`Sem imagem para ${product.name}`} />
           )}
-        </Link>
+        </div>
 
         {/* Conteúdo */}
         <div className="flex flex-1 flex-col p-4 border-t-2 border-transparent group-hover:border-brand-amber transition-colors">
           {/* Badge de categoria */}
           <Link
             href={`/produtos?categoria=${product.category.slug}`}
-            className="mb-1 inline-block self-start rounded-full bg-brand-amber/10 px-2 py-0.5 text-xs font-bold text-brand-amber hover:bg-brand-amber/20 transition-colors"
+            className="relative z-10 mb-1 inline-block self-start rounded-full bg-brand-amber/10 px-2 py-0.5 text-xs font-bold text-brand-amber hover:bg-brand-amber/20 transition-colors"
             data-testid="categoria-badge"
           >
             {product.category.name}
           </Link>
 
-          {/* Nome */}
-          <Link href={`/produtos/${product.slug}`} className="mt-1 flex-1">
+          {/* Nome — stretched link cobre o card inteiro */}
+          <Link
+            href={`/produtos/${product.slug}`}
+            className="mt-1 flex-1 after:absolute after:inset-0"
+          >
             <h3 className="text-sm font-bold text-brand-navy line-clamp-2 group-hover:text-brand-amber transition-colors">
               {product.name}
             </h3>
@@ -69,11 +72,11 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
 
           {/* CTAs */}
-          <div className="mt-3 flex gap-2">
+          <div className="relative z-10 mt-3 flex gap-2">
             <button
               type="button"
               className={cn(
-                'flex-1 rounded-lg border-2 border-brand-navy px-3 py-1.5 text-xs font-bold text-brand-navy',
+                'flex-1 cursor-pointer rounded-lg border-2 border-brand-navy px-3 py-1.5 text-xs font-bold text-brand-navy',
                 'transition-colors hover:bg-brand-navy hover:text-white',
               )}
               onClick={() => setVarejoOpen(true)}
@@ -84,7 +87,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <button
               type="button"
               className={cn(
-                'flex-1 rounded-lg bg-brand-amber px-3 py-1.5 text-xs font-bold text-brand-navy',
+                'flex-1 cursor-pointer rounded-lg bg-brand-amber px-3 py-1.5 text-xs font-bold text-brand-navy',
                 'transition-colors hover:bg-brand-amber-dark',
               )}
               onClick={() => setAtacadoOpen(true)}

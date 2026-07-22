@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { submitLead } from '@/actions/leads'
+import { maskPhone } from '@/lib/utils/masks'
 
 type FormState = 'idle' | 'loading' | 'success' | 'error'
 
 export function LeadGeneralForm() {
   const [formState, setFormState] = useState<FormState>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [phoneValue, setPhoneValue] = useState('')
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -29,6 +31,7 @@ export function LeadGeneralForm() {
       if (result.success) {
         setFormState('success')
         form.reset()
+        setPhoneValue('')
       } else {
         setFormState('error')
         setErrorMessage(result.error ?? 'Ocorreu um erro. Tente novamente.')
@@ -110,6 +113,9 @@ export function LeadGeneralForm() {
               type="tel"
               required
               placeholder="(11) 99999-9999"
+              value={phoneValue}
+              onChange={(e) => setPhoneValue(maskPhone(e.target.value))}
+              maxLength={15}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-brand-amber focus:outline-none focus:ring-2 focus:ring-brand-amber/20"
             />
           </div>
