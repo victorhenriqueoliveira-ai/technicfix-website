@@ -143,4 +143,7 @@
   html {
     @apply font-sans;
   }
+  button, [role="button"], a {
+    cursor: pointer;
+  }
 }

@@ -2,8 +2,12 @@
 
 import { useState } from 'react'
 import { submitLead } from '@/actions/leads'
+import { maskPhone } from '@/lib/utils/masks'
 
-const MAPS_EMBED_URL = 'https://maps.google.com/maps?q=Technicfix+S%C3%A3o+Paulo&output=embed'
+const address =
+  'Rua Major Lúcio Dias Ramos, 27 - Jardim Noronha - São Paulo - SP - CEP 04855-230'
+
+const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`
 
 const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, '') ?? ''
 const whatsappHref = whatsappNumber
@@ -84,14 +88,14 @@ export default function ContatoPage() {
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-amber/10 text-brand-amber">
                     <LocationIcon className="h-4 w-4" />
                   </div>
-                  <span className="text-sm text-brand-navy/70 pt-2">Rua Exemplo, 123 — São Paulo, SP — CEP 01310-000</span>
+                  <span className="text-sm text-brand-navy/70 pt-2">Rua Major Lúcio Dias Ramos, 27 - Jardim Noronha - São Paulo - SP — 04855-230</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-amber/10 text-brand-amber">
                     <PhoneIcon className="h-4 w-4" />
                   </div>
                   <span className="text-sm text-brand-navy/70 pt-2">
-                    {process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '(11) 99999-0000'}
+                    +55 11 97276-1161
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -179,9 +183,10 @@ export default function ContatoPage() {
                     type="tel"
                     required
                     value={form.phone}
-                    onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                    onChange={(e) => setForm((f) => ({ ...f, phone: maskPhone(e.target.value) }))}
                     className={inputClass}
                     placeholder="(11) 99999-0000"
+                    maxLength={15}
                   />
                 </div>
 

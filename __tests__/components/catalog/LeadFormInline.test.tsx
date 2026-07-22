@@ -125,7 +125,7 @@ describe('LeadFormInline', () => {
             type: 'varejo',
             name: 'Maria Santos',
             email: 'maria@email.com',
-            phone: '11977776666',
+            phone: '(11) 97777-6666',
             productId: 'prod-1',
           })
         )

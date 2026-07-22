@@ -79,7 +79,7 @@ describe('ContatoPage', () => {
           type: 'geral',
           name: 'João Silva',
           email: 'joao@email.com',
-          phone: '11999990000',
+          phone: '(11) 99999-0000',
         })
       )
     })
