@@ -88,7 +88,7 @@ export default function ContatoPage() {
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-amber/10 text-brand-amber">
                     <LocationIcon className="h-4 w-4" />
                   </div>
-                  <span className="text-sm text-brand-navy/70 pt-2">Rua Major Lúcio Dias Ramos, 27 - Jardim Noronha - São Paulo - SP — CEP:04855-230</span>
+                  <span className="text-sm text-brand-navy/70 pt-2">Rua Major Lúcio Dias Ramos, 27 - Jardim Noronha - São Paulo - SP — 04855-230</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-amber/10 text-brand-amber">
