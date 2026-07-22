@@ -48,6 +48,34 @@ export function MobileMenu({ categories, products }: MobileMenuProps) {
 
           {/* Área scrollável — categorias + produtos */}
           <div className="flex-1 overflow-y-auto">
+            {/* Links principais — mesmos itens do MainBar desktop */}
+            <div className="border-b border-gray-100 px-2 py-2">
+              <Link
+                href="/produtos"
+                className="block px-2 py-2.5 text-sm font-medium text-gray-700 hover:text-brand-amber"
+                onClick={() => setOpen(false)}
+                data-testid="mobile-nav-produtos"
+              >
+                Produtos
+              </Link>
+              <Link
+                href="/contato"
+                className="block px-2 py-2.5 text-sm font-medium text-gray-700 hover:text-brand-amber"
+                onClick={() => setOpen(false)}
+                data-testid="mobile-nav-contato"
+              >
+                Contato
+              </Link>
+              <Link
+                href="/technocalhas"
+                className="block px-2 py-2.5 text-sm font-medium text-gray-700 hover:text-brand-amber"
+                onClick={() => setOpen(false)}
+                data-testid="mobile-nav-technocalhas"
+              >
+                Parceira Technocalhas
+              </Link>
+            </div>
+
             {/* Categorias */}
             <div className="border-b border-gray-100 px-2 py-2">
               <p className="px-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
