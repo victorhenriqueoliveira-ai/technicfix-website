@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import { db } from '@/lib/prisma'
 import type { CategorySummary, CategoryWithProducts } from '@/lib/types'
 
@@ -5,7 +6,13 @@ import type { CategorySummary, CategoryWithProducts } from '@/lib/types'
  * Retorna todas as categorias-raiz (parentId: null) com seus filhos ordenados por nome.
  * Utilizada pelo layout.tsx para popular o Header/nav.
  */
-export async function getCategoriesWithChildren(): Promise<CategorySummary[]> {
+export const getCategoriesWithChildren = unstable_cache(
+  async (): Promise<CategorySummary[]> => getCategoriesWithChildrenFn(),
+  ['categories-with-children'],
+  { revalidate: 300 }
+)
+
+async function getCategoriesWithChildrenFn(): Promise<CategorySummary[]> {
   const categories = await db.category.findMany({
     where: { parentId: null },
     include: {
@@ -36,7 +43,13 @@ export async function getCategoriesWithChildren(): Promise<CategorySummary[]> {
  * por categoria (ordenados por featured desc, createdAt desc).
  * Utilizada pelo page.tsx para as seções da homepage.
  */
-export async function getCategoriesWithProducts(
+export const getCategoriesWithProducts = unstable_cache(
+  async (limit = 8): Promise<CategoryWithProducts[]> => getCategoriesWithProductsFn(limit),
+  ['categories-with-products'],
+  { revalidate: 300 }
+)
+
+async function getCategoriesWithProductsFn(
   limit = 8,
 ): Promise<CategoryWithProducts[]> {
   const categories = await db.category.findMany({

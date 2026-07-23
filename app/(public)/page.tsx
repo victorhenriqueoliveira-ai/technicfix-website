@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import type { Metadata } from 'next'
 import { db } from '@/lib/prisma'
 import { getCategoriesWithProducts } from '@/lib/data/categories'
@@ -5,6 +6,8 @@ import { Hero } from '@/components/home/Hero'
 import { BenefitsBar } from '@/components/home/BenefitsBar'
 import { CategoryProductSection } from '@/components/home/CategoryProductSection'
 import { env } from '@/lib/env'
+
+export const revalidate = 300
 
 const siteUrl = env.NEXT_PUBLIC_SITE_URL
 
@@ -23,16 +26,17 @@ export const metadata: Metadata = {
   },
 }
 
-async function getBanners() {
-  return db.banner.findMany({
-    where: { active: true },
-    orderBy: { order: 'asc' },
-  })
-}
+const getBanners = unstable_cache(
+  () => db.banner.findMany({ where: { active: true }, orderBy: { order: 'asc' } }),
+  ['home-banners'],
+  { revalidate: 300 }
+)
 
-async function getSiteConfig() {
-  return db.siteConfig.findUnique({ where: { id: 'singleton' } })
-}
+const getSiteConfig = unstable_cache(
+  () => db.siteConfig.findUnique({ where: { id: 'singleton' } }),
+  ['site-config'],
+  { revalidate: 300 }
+)
 
 export default async function HomePage() {
   const [banners, categoriesWithProducts, config] = await Promise.all([
