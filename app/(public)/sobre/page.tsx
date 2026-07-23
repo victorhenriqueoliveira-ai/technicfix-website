@@ -1,5 +1,7 @@
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 
+export const revalidate = 3600
+
 export const metadata = {
   title: 'Sobre Nós',
   description: 'Conheça a história, missão e valores da TechnicFix — fixação que não falha.',
