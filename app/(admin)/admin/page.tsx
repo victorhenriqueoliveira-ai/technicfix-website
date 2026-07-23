@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import { db } from '@/lib/prisma'
 import { MetricCard } from '@/components/admin/MetricCard'
 import { DashboardCharts } from '@/components/admin/DashboardCharts'
@@ -6,16 +7,38 @@ import { getSalesSummary, getTopProducts } from '@/actions/sales'
 import { Package, Tag, Users, ShoppingCart } from 'lucide-react'
 import type { LeadsByDay, LeadsByType, LeadFunnel } from '@/lib/types'
 
+const getDashboardData = unstable_cache(
+  async () => {
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+    const ninetyDaysAgo = new Date()
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
+
+    return Promise.all([
+      db.product.count(),
+      db.category.count(),
+      db.lead.count({ where: { status: 'novo' } }),
+      db.sale.aggregate({ _count: true, where: { createdAt: { gte: startOfMonth } } }),
+      getSalesSummary({ period: '30d' }),
+      getTopProducts({ period: '30d', limit: 5 }),
+      db.lead.groupBy({
+        by: ['createdAt'],
+        _count: { id: true },
+        where: { createdAt: { gte: ninetyDaysAgo } },
+        orderBy: { createdAt: 'asc' },
+      }),
+      db.lead.groupBy({
+        by: ['type', 'createdAt'],
+        _count: { id: true },
+        where: { createdAt: { gte: ninetyDaysAgo } },
+      }),
+      db.lead.groupBy({ by: ['status'], _count: { id: true } }),
+    ])
+  },
+  ['admin-dashboard'],
+  { revalidate: 120 }
+)
+
 export default async function AdminDashboardPage() {
-  const startOfMonth = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    1
-  )
-
-  const ninetyDaysAgo = new Date()
-  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
-
   const [
     totalProdutos,
     totalCategorias,
@@ -26,35 +49,7 @@ export default async function AdminDashboardPage() {
     leadsByDayRaw,
     leadsByTypeRaw,
     leadFunnelRaw,
-  ] = await Promise.all([
-    db.product.count(),
-    db.category.count(),
-    db.lead.count({ where: { status: 'novo' } }),
-    db.sale.aggregate({
-      _count: true,
-      where: { createdAt: { gte: startOfMonth } },
-    }),
-    getSalesSummary({ period: '30d' }),
-    getTopProducts({ period: '30d', limit: 5 }),
-    // Volume diário (últimos 90 dias)
-    db.lead.groupBy({
-      by: ['createdAt'],
-      _count: { id: true },
-      where: { createdAt: { gte: ninetyDaysAgo } },
-      orderBy: { createdAt: 'asc' },
-    }),
-    // Composição por tipo (últimos 90 dias)
-    db.lead.groupBy({
-      by: ['type', 'createdAt'],
-      _count: { id: true },
-      where: { createdAt: { gte: ninetyDaysAgo } },
-    }),
-    // Funil de conversão (todos os leads)
-    db.lead.groupBy({
-      by: ['status'],
-      _count: { id: true },
-    }),
-  ])
+  ] = await getDashboardData()
 
   // ─── Processar leadsByDay ────────────────────────────────────────────────────
   const leadsByDayMap: Record<string, number> = {}
