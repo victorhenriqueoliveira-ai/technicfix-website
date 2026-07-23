@@ -1,15 +1,7 @@
-import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { AdminHeader } from '@/components/admin/AdminHeader'
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth()
-
-  if (!session) {
-    redirect('/admin/login')
-  }
-
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidebar — fixa no desktop, oculta em mobile */}
